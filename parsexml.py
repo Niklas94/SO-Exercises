@@ -13,6 +13,7 @@ for child in root:
     if child.tag == "Platform":
         for g_child in child:
             for g_g_child in g_child:
+                g_g_child.set('MCP', g_child.get('Id'))
                 cores.append(g_g_child.attrib)
 
 print(tasks)
