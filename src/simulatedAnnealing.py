@@ -36,15 +36,22 @@ def AccProbability(costCurrent, costNeighbour, T):
 # Penalty function
 def Cost(solution: dict):
 
-    for key, value in solution.items():
+    cost = 0
+    
+    for (chipId, coreId), taskId in solution.items():
         # key = (0, 2)
         # value = [0, 2]
         I = 0
         for item in value:
+            
 
 
     return 1
 
 # Checks if solution is scheduble 
 def isSolution(solution: dict):
+    
+    for (chipId, coreId), taskId in solution.items():
+        # Value : 
+    
     return true

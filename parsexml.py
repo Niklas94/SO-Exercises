@@ -27,7 +27,12 @@ for item in tasks:
     coreToBeBinded = random.choice(cores)
     item['MCP'] = coreToBeBinded['mcpID']
     item['Core'] = coreToBeBinded['Id']
-    c_t[(coreToBeBinded['mcpID'], coreToBeBinded['Id'])] = item['Id']
-    print ('task: ', item)
+    if (coreToBeBinded['mcpID'], coreToBeBinded['Id']) in c_t:
+        c_t[(coreToBeBinded['mcpID'], coreToBeBinded['Id'])].append(item['Id'])
+    else:
+        c_t[(coreToBeBinded['mcpID'], coreToBeBinded['Id'])] = [item['Id']]
+    # print ('task: ', item)
 
 print(c_t)
+
+# print(cores)
