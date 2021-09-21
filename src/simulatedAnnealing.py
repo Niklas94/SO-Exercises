@@ -1,9 +1,8 @@
 import random
 import math
 
-
 # Algorithm 5 - Exercises week 37
-def simulatedAnnealing(initialSolution: dict):
+def simulatedAnnealing(initialSolution):
     T = 10000   # Temperature - Fixed value
     r = 0.99    # Pick value between 0.8 - 0.99
     C = initialSolution
@@ -30,11 +29,11 @@ def neighbourhood (tasks, cores):
 def AccProbability(costCurrent, costNeighbour, T):
     if (costCurrent > costNeighbour):
         return 1.1
-    else
+    else:
         return math.exp( (costCurrent - costNeighbour) / T) 
     
 # Penalty function
-def Cost(solution: dict):
+def Cost(solution):
 
     cost = 0
     
@@ -42,16 +41,33 @@ def Cost(solution: dict):
         # key = (0, 2)
         # value = [0, 2]
         I = 0
-        for item in value:
+        #for item in value:
             
 
 
     return 1
 
 # Checks if solution is scheduble 
-def isSolution(solution: dict):
+def isSolution(solution):
+        
+    for chip in solution:        
+                
+        # print(chip.Cores["0"])
+                
+        for coreId, WCETFactor, Tasks in chip.Cores:
+            
+            print("coreId : " + coreId)
+            
+            #print(Value)
+            
+            # WCETFactor & Tasks
+            acc = 0
+            
+            for taskId, (Period, Deadline, WCET) in Tasks.items():
+                
+                acc += WCET * WCETFactor 
+                
+                if acc > Deadline:
+                    return False
     
-    for (chipId, coreId), taskId in solution.items():
-        # Value : 
-    
-    return true
+    return True
