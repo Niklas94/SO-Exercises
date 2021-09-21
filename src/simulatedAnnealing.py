@@ -51,23 +51,15 @@ def Cost(solution):
 def isSolution(solution):
         
     for chip in solution:        
-                
-        # print(chip.Cores["0"])
-                
-        for coreId, WCETFactor, Tasks in chip.Cores:
-            
-            print("coreId : " + coreId)
-            
-            #print(Value)
-            
+        for chipID in chip.Cores:
             # WCETFactor & Tasks
-            acc = 0
+            acc = 0.0
             
-            for taskId, (Period, Deadline, WCET) in Tasks.items():
+            for taskId in chip.Cores[chipID].Tasks:
+                task = chip.Cores[chipID].Tasks[taskId]
+                acc += float(task.WCET) * float(chip.Cores[chipID].WCETFactor) 
                 
-                acc += WCET * WCETFactor 
-                
-                if acc > Deadline:
+                if acc > float(task.Deadline):
                     return False
     
     return True

@@ -6,7 +6,7 @@ from simulatedAnnealing import *
 tasks = []
 chips = []
 c_t = {}
-tree = ET.parse('small.xml')
+tree = ET.parse('../small.xml')
 root = tree.getroot()
 
 
@@ -89,16 +89,13 @@ for child in root:
 
 # Randomize initial solution
 for item in tasks:
-    
     randomChip = random.choice(chips)
     
-    choice = randomChip.Cores.keys()
+    choice = list(randomChip.Cores.keys())
         
     CoreId = random.choice(choice)
     
     randomChip.Cores[CoreId].addTask(item)
 
-#for chip in chips:
-    #print(chip)
     
-print('randomizedSolution is a solution: ' + isSolution(chips))
+print('randomizedSolution is a solution: ', str(isSolution(chips)))
