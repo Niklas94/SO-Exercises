@@ -4,6 +4,7 @@ import random
 
 tasks = []
 cores = []
+# c_t = {}
 tree = ET.parse('small.xml')
 root = tree.getroot()
 
@@ -25,7 +26,10 @@ for item in tasks:
     coreToBeBinded = random.choice(cores)
     item['MCP'] = coreToBeBinded['mcpID']
     item['Core'] = coreToBeBinded['Id']
+    # c_t[(coreToBeBinded['mcpID'], coreToBeBinded['Id'])] = item['Id']
     print ('task: ', item)
+
+# print(c_t)
     
     
 #for item in cores:
@@ -34,7 +38,7 @@ for item in tasks:
     
 def switchTask (tasks, cores):
      randomTask = random.choice(tasks)
-     randomCore= random.choice(cores)
+     randomCore = random.choice(cores)
      
      randomTask['MCP'] = randomCore['mcpID']
      randomTask['Core'] = randomCore['Id']
