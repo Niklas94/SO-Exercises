@@ -54,12 +54,13 @@ def isSolution(solution):
         for chipID in chip.Cores:
             # WCETFactor & Tasks
             acc = 0.0
+            curr_chip = chip.Cores[chipID]
             
-            for taskId in chip.Cores[chipID].Tasks:
-                task = chip.Cores[chipID].Tasks[taskId]
-                acc += float(task.WCET) * float(chip.Cores[chipID].WCETFactor) 
+            for taskId in curr_chip.Tasks:
+                curr_task = chip.Cores[chipID].Tasks[taskId]
+                acc += float(curr_task.WCET) * float(curr_chip.WCETFactor) 
                 
-                if acc > float(task.Deadline):
+                if acc > float(curr_task.Deadline):
                     return False
     
     return True
