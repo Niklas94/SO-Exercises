@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="732d49c5-ea62-4dcd-acaf-366b4b2d4550" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="JupyterTrust" id="ea543e93-7cb2-4943-97f6-525b5a7b0ed5" />
+  <component name="ProjectId" id="1xnzv8fcZ5wULSrclqwjh8ACk9v" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="project.structure.last.edited" value="Global Libraries" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Python" type="PythonConfigurationType" factoryName="Python">
+      <module name="SO-Exercises" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="/usr/local/bin/python3.9" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
+      <module name="SO-Exercises" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="/usr/local/bin/python3.9" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="732d49c5-ea62-4dcd-acaf-366b4b2d4550" name="Default Changelist" comment="" />
+      <created>1631005867457</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1631005867457</updated>
+      <workItem from="1631005868527" duration="76000" />
+      <workItem from="1631005957738" duration="61000" />
+      <workItem from="1631006071064" duration="154000" />
+      <workItem from="1631006589042" duration="756000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="320" y="74" key="#Plugins" timestamp="1631006160409">
+      <screen x="0" y="23" width="1440" height="806" />
+    </state>
+    <state x="320" y="74" key="#Plugins/0.23.1440.806@0.23.1440.806" timestamp="1631006160409" />
+    <state x="207" y="23" key="#Project_Structure" timestamp="1631006921554">
+      <screen x="0" y="23" width="1440" height="806" />
+    </state>
+    <state x="207" y="23" key="#Project_Structure/0.23.1440.806@0.23.1440.806" timestamp="1631006921554" />
+    <state x="184" y="57" width="1071" height="772" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1631007116479">
+      <screen x="0" y="23" width="1440" height="806" />
+    </state>
+    <state x="184" y="57" width="1071" height="772" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1440.806@0.23.1440.806" timestamp="1631007116479" />
+    <state x="307" y="88" key="#com.intellij.openapi.projectRoots.ui.ProjectJdksEditor" timestamp="1631006697962">
+      <screen x="0" y="23" width="1440" height="806" />
+    </state>
+    <state x="307" y="88" key="#com.intellij.openapi.projectRoots.ui.ProjectJdksEditor/0.23.1440.806@0.23.1440.806" timestamp="1631006697962" />
+    <state x="408" y="169" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1631005972816">
+      <screen x="0" y="23" width="1440" height="806" />
+    </state>
+    <state x="408" y="169" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.23.1440.806@0.23.1440.806" timestamp="1631005972816" />
+    <state x="579" y="175" width="400" height="535" key="EnvironmentVariablesDialog" timestamp="1631007094678">
+      <screen x="0" y="23" width="1440" height="806" />
+    </state>
+    <state x="579" y="175" width="400" height="535" key="EnvironmentVariablesDialog/0.23.1440.806@0.23.1440.806" timestamp="1631007094678" />
+    <state x="506" y="188" key="FileChooserDialogImpl" timestamp="1631006833575">
+      <screen x="0" y="23" width="1440" height="806" />
+    </state>
+    <state x="506" y="188" key="FileChooserDialogImpl/0.23.1440.806@0.23.1440.806" timestamp="1631006833575" />
+    <state width="1358" height="194" key="GridCell.Tab.0.bottom" timestamp="1631007749733">
+      <screen x="0" y="23" width="1440" height="806" />
+    </state>
+    <state width="1358" height="194" key="GridCell.Tab.0.bottom/0.23.1440.806@0.23.1440.806" timestamp="1631007749733" />
+    <state width="1358" height="194" key="GridCell.Tab.0.center" timestamp="1631007749732">
+      <screen x="0" y="23" width="1440" height="806" />
+    </state>
+    <state width="1358" height="194" key="GridCell.Tab.0.center/0.23.1440.806@0.23.1440.806" timestamp="1631007749732" />
+    <state width="1358" height="194" key="GridCell.Tab.0.left" timestamp="1631007749731">
+      <screen x="0" y="23" width="1440" height="806" />
+    </state>
+    <state width="1358" height="194" key="GridCell.Tab.0.left/0.23.1440.806@0.23.1440.806" timestamp="1631007749731" />
+    <state width="1358" height="194" key="GridCell.Tab.0.right" timestamp="1631007749733">
+      <screen x="0" y="23" width="1440" height="806" />
+    </state>
+    <state width="1358" height="194" key="GridCell.Tab.0.right/0.23.1440.806@0.23.1440.806" timestamp="1631007749733" />
+    <state x="536" y="135" key="RollbackChangesDialog" timestamp="1631006605747">
+      <screen x="0" y="23" width="1440" height="806" />
+    </state>
+    <state x="536" y="135" key="RollbackChangesDialog/0.23.1440.806@0.23.1440.806" timestamp="1631006605747" />
+    <state x="207" y="23" key="SettingsEditor" timestamp="1631007180377">
+      <screen x="0" y="23" width="1440" height="806" />
+    </state>
+    <state x="207" y="23" key="SettingsEditor/0.23.1440.806@0.23.1440.806" timestamp="1631007180377" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/SO_Exercises$Python.coverage" NAME="Python Coverage Results" MODIFIED="1631006965984" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+  </component>
+</project>
