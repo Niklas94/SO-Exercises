@@ -20,47 +20,43 @@ def simulatedAnnealing(initialSolution):
 
 # Find 'nearby' solution
 def neighbourhood (tasks, cores):
-     randomTask = random.choice(tasks)
-     randomCore= random.choice(cores)
-     randomTask['MCP'] = randomCore['mcpID']
-     randomTask['Core'] = randomCore['Id']
+    randomTask = random.choice(tasks)
+    randomCore= random.choice(cores)
+    randomTask['MCP'] = randomCore['mcpID']
+    randomTask['Core'] = randomCore['Id']
 
 # Something
 def AccProbability(costCurrent, costNeighbour, T):
     if (costCurrent > costNeighbour):
         return 1.1
     else:
-        return math.exp( (costCurrent - costNeighbour) / T) 
-    
+        return math.exp( (costCurrent - costNeighbour) / T)
+
 # Penalty function
 def Cost(solution):
-
     cost = 0
-    
+
     for (chipId, coreId), taskId in solution.items():
         # key = (0, 2)
         # value = [0, 2]
         I = 0
         #for item in value:
-            
-
 
     return 1
 
 # Checks if solution is scheduble 
 def isSolution(solution):
-        
-    for chip in solution:        
+    for chip in solution:
         for chipID in chip.Cores:
             # WCETFactor & Tasks
             acc = 0.0
             curr_chip = chip.Cores[chipID]
-            
+
             for taskId in curr_chip.Tasks:
                 curr_task = chip.Cores[chipID].Tasks[taskId]
                 acc += float(curr_task.WCET) * float(curr_chip.WCETFactor) 
-                
+
                 if acc > float(curr_task.Deadline):
                     return False
-    
+
     return True
