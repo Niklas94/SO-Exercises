@@ -23,6 +23,9 @@ class Task:
     def __str__(self):
         return "    Id: " + self.Id + ", Period: " + self.Period + ", Deadline: " + self.Deadline + ", WCET: " + self.WCET
 
+    def __eq__(self, other):
+        if isinstance(other, Task):
+            return self.Id = Task.Id
 class Core:
 
     def __init__(self, Id, WCETFactor):
@@ -43,6 +46,11 @@ class Core:
             print(self.Tasks[Id])
 
         return string
+    
+    def __eq__(self, other):
+        if isinstance(other, Core):
+            return self.Id == other.Id and self.WCETFactor == other.WCETFactor and self.Tasks == other.Tasks
+        return False
 
 class Chip:
 
@@ -60,6 +68,11 @@ class Chip:
             print(self.Cores[Id])
 
         return string
+
+    def __eq__(self, other):
+        if isinstance(other, Chip):
+            return self.Id == other.Id and self.Cores == other.Core
+        return False
 
 
 
