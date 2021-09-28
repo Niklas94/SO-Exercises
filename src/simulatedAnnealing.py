@@ -1,39 +1,45 @@
 import random
 import math
+import copy
 
 # Algorithm 5 - Exercises week 37
 def simulatedAnnealing(initialSolution):
-    T = 10000   # Temperature - Fixed value
-    r = 0.99    # Pick value between 0.8 - 0.99
+    T = 10000000000000  # Temperature - Fixed value
+    r = 0.999    # Pick value between 0.8 - 0.99
     C = initialSolution
+    curr_best = copy.deepcopy(initialSolution)
     l = [] # set/array of solutions
 
     while (T > 1):
         CP = neighbourhood(C)
-        if (AccProbability(Cost(C), Cost(CP), T) > random.uniform(0, 1)):
+        prob = random.uniform(0,1)
+        if (AccProbability(Cost(C), Cost(CP), T) > prob):
             C = CP
             if (isSolution(C)):
-                l.append(C)
+                if (Cost(C) < Cost(curr_best)):
+                    curr_best = copy.deepcopy(C)
+                # l.append(C)
         T = T * r
 
-    return l
+    return curr_best
 
 # Find 'nearby' solution
 def neighbourhood (chips):
-    # find first random core
-    randomChip = random.choice(chips)
-    choice = list(randomChip.Cores.keys())
-    CoreId = random.choice(choice)
+    c = copy.deepcopy(chips)
 
-    # get a random task out, if none return current solution
-    tChoice = list(randomChip.Cores[CoreId].Tasks.keys())
-    if len(tChoice) == 0:
-        return chips
+    tChoice = []
+    while len(tChoice) == 0:
+        randomChip = random.choice(c)
+        choice = list(randomChip.Cores.keys())
+        CoreId = random.choice(choice)
+
+        # get a random task out, if none return current solution
+        tChoice = list(randomChip.Cores[CoreId].Tasks.keys())
 
     task = randomChip.Cores[CoreId].Tasks[random.choice(tChoice)]
 
     # find second random core
-    rChip = random.choice(chips)
+    rChip = random.choice(c)
     rChoice = list(rChip.Cores.keys())
     rCoreId = random.choice(rChoice)
 
@@ -42,12 +48,11 @@ def neighbourhood (chips):
     # add task to new core
     rChip.Cores[rCoreId].addTask(task)
 
-    return chips
+    return c
 
 
 # Something
 def AccProbability(costCurrent, costNeighbour, T):
-    print("Curr: " + str(costCurrent) + ", neigh: " + str(costNeighbour) + ", T: " + str(T))
     if (costCurrent > costNeighbour):
         return 1.1
     else:

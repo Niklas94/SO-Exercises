@@ -92,11 +92,13 @@ for item in tasks:
 
 
 print('randomizedSolution is a solution: ', str(isSolution(chips)))
-for chip in chips:
-    print(chip)
-print(Cost(chips))
+
+# get cost before, run SA, get cost after and print solution
+c = Cost(chips)
+new = simulatedAnnealing(chips)
+print("")
+print(c)
 print("-------------------------------")
-simulatedAnnealing(chips)
-for chip in chips:
+print(Cost(new))
+for chip in new:
     print(chip)
-print(Cost(chips))
