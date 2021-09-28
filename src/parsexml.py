@@ -6,7 +6,7 @@ from simulatedAnnealing import *
 tasks = []
 chips = []
 c_t = {}
-tree = ET.parse('../small.xml')
+tree = ET.parse('../medium.xml')
 root = tree.getroot()
 
 
@@ -97,8 +97,11 @@ print('randomizedSolution is a solution: ', str(isSolution(chips)))
 c = Cost(chips)
 new = simulatedAnnealing(chips)
 print("")
+for chip in new:
+    print(chip)
+print("")
+print(chips == new)
+print("")
 print(c)
 print("-------------------------------")
 print(Cost(new))
-for chip in new:
-    print(chip)

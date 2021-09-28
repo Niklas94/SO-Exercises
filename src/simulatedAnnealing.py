@@ -8,17 +8,18 @@ def simulatedAnnealing(initialSolution):
     r = 0.999    # Pick value between 0.8 - 0.99
     C = initialSolution
     curr_best = copy.deepcopy(initialSolution)
-    l = [] # set/array of solutions
 
     while (T > 1):
+        print(T)
         CP = neighbourhood(C)
         prob = random.uniform(0,1)
         if (AccProbability(Cost(C), Cost(CP), T) > prob):
+            print("Curr best: " + str(Cost(curr_best)))
+            print("Picking " + str(Cost(CP)) + " over " + str(Cost(C)))
             C = CP
             if (isSolution(C)):
                 if (Cost(C) < Cost(curr_best)):
                     curr_best = copy.deepcopy(C)
-                # l.append(C)
         T = T * r
 
     return curr_best
@@ -75,7 +76,7 @@ def Cost(chips):
                 prevTaskDeadline = int(curr_task.Deadline)
 
                 taskCount += 1
-                cost += taskCount
+                cost += taskCount #* float(chip.Cores[coreID].WCETFactor)
 
     return cost
 
