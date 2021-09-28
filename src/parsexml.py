@@ -25,7 +25,7 @@ class Task:
 
     def __eq__(self, other):
         if isinstance(other, Task):
-            return self.Id = Task.Id
+            return self.Id == other.Id
 class Core:
 
     def __init__(self, Id, WCETFactor):
@@ -46,7 +46,7 @@ class Core:
             print(self.Tasks[Id])
 
         return string
-    
+
     def __eq__(self, other):
         if isinstance(other, Core):
             return self.Id == other.Id and self.WCETFactor == other.WCETFactor and self.Tasks == other.Tasks
@@ -71,7 +71,7 @@ class Chip:
 
     def __eq__(self, other):
         if isinstance(other, Chip):
-            return self.Id == other.Id and self.Cores == other.Core
+            return self.Id == other.Id and self.Cores == other.Cores
         return False
 
 
@@ -80,7 +80,6 @@ for child in root:
     if child.tag == "Application":
         for g_child in child:
             newTask = Task(Id=g_child.attrib['Id'], Period=g_child.attrib['Period'], Deadline=g_child.attrib['Deadline'], WCET=g_child.attrib['WCET'])
-            # print(newTask)
             tasks.append(newTask)
 
     if child.tag == "Platform":
@@ -103,6 +102,13 @@ for item in tasks:
 
     randomChip.Cores[CoreId].addTask(item)
 
+# sort tasks by deadlines in cores in initial solution
+for chip in chips:
+    for coreID in chip.Cores:
+        tD = copy.deepcopy(chip.Cores[coreID].Tasks)
+        chip.Cores[coreID].Tasks = dict(sorted(tD.items(), key = lambda x:
+                                               int(x[1].Deadline)))
+
 
 print('randomizedSolution is a solution: ', str(isSolution(chips)))
 
@@ -113,7 +119,8 @@ print("")
 for chip in new:
     print(chip)
 print("")
-print(chips == new)
+print("Is init a solution: " + str(isSolution(chips)))
+print("Is result a solution: " + str(isSolution(new)))
 print("")
 print(c)
 print("-------------------------------")
