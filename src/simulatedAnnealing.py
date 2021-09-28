@@ -19,42 +19,72 @@ def simulatedAnnealing(initialSolution):
     return l
 
 # Find 'nearby' solution
-def neighbourhood (tasks, cores):
-    randomTask = random.choice(tasks)
-    randomCore= random.choice(cores)
-    randomTask['MCP'] = randomCore['mcpID']
-    randomTask['Core'] = randomCore['Id']
+def neighbourhood (chips):
+    # find first random core
+    randomChip = random.choice(chips)
+    choice = list(randomChip.Cores.keys())
+    CoreId = random.choice(choice)
+
+    # get a random task out, if none return current solution
+    tChoice = list(randomChip.Cores[CoreId].Tasks.keys())
+    if len(tChoice) == 0:
+        return chips
+
+    task = randomChip.Cores[CoreId].Tasks[random.choice(tChoice)]
+
+    # find second random core
+    rChip = random.choice(chips)
+    rChoice = list(rChip.Cores.keys())
+    rCoreId = random.choice(rChoice)
+
+    # remove task from old core
+    randomChip.Cores[CoreId].removeTask(task)
+    # add task to new core
+    rChip.Cores[rCoreId].addTask(task)
+
+    return chips
+
 
 # Something
 def AccProbability(costCurrent, costNeighbour, T):
+    print("Curr: " + str(costCurrent) + ", neigh: " + str(costNeighbour) + ", T: " + str(T))
     if (costCurrent > costNeighbour):
         return 1.1
     else:
         return math.exp( (costCurrent - costNeighbour) / T)
 
 # Penalty function
-def Cost(solution):
+def Cost(chips):
     cost = 0
 
-    for (chipId, coreId), taskId in solution.items():
-        # key = (0, 2)
-        # value = [0, 2]
-        I = 0
-        #for item in value:
+    for chip in chips:
+        for coreID in chip.Cores:
+            taskCount = 0
+            prevTaskDeadline = 0
+            numUnordered = 0
+            for taskId in chip.Cores[coreID].Tasks:
+                curr_task = chip.Cores[coreID].Tasks[taskId]
+                if int(curr_task.Deadline) < prevTaskDeadline and prevTaskDeadline != 0:
+                    cost += 1 + numUnordered
+                    numUnordered += 1
+                prevTaskDeadline = int(curr_task.Deadline)
 
-    return 1
+                taskCount += 1
+                cost += taskCount
+
+    return cost
 
 # Checks if solution is scheduble 
 def isSolution(solution):
     for chip in solution:
-        for chipID in chip.Cores:
+        for coreID in chip.Cores:
             # WCETFactor & Tasks
             acc = 0.0
-            curr_chip = chip.Cores[chipID]
+            curr_core = chip.Cores[coreID]
 
-            for taskId in curr_chip.Tasks:
-                curr_task = chip.Cores[chipID].Tasks[taskId]
-                acc += float(curr_task.WCET) * float(curr_chip.WCETFactor) 
+            for taskId in curr_core.Tasks:
+                curr_task = chip.Cores[coreID].Tasks[taskId]
+                acc += float(curr_task.WCET) * float(curr_core.WCETFactor)
 
                 if acc > float(curr_task.Deadline):
                     return False
