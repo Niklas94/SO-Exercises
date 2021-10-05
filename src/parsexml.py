@@ -6,7 +6,7 @@ from simulatedAnnealing import *
 tasks = []
 chips = []
 c_t = {}
-tree = ET.parse('../medium.xml')
+tree = ET.parse('../large.xml')
 root = tree.getroot()
 
 
