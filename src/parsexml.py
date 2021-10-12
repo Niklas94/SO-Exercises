@@ -6,7 +6,7 @@ from simulatedAnnealing import *
 tasks = []
 chips = []
 c_t = {}
-tree = ET.parse('../large.xml')
+tree = ET.parse('../medium.xml')
 root = tree.getroot()
 
 
@@ -26,6 +26,7 @@ class Task:
     def __eq__(self, other):
         if isinstance(other, Task):
             return self.Id == other.Id
+
 class Core:
 
     def __init__(self, Id, WCETFactor):
@@ -101,13 +102,6 @@ for item in tasks:
     CoreId = random.choice(choice)
 
     randomChip.Cores[CoreId].addTask(item)
-
-# sort tasks by deadlines in cores in initial solution
-for chip in chips:
-    for coreID in chip.Cores:
-        tD = copy.deepcopy(chip.Cores[coreID].Tasks)
-        chip.Cores[coreID].Tasks = dict(sorted(tD.items(), key = lambda x:
-                                               int(x[1].Deadline)))
 
 
 print('randomizedSolution is a solution: ', str(isSolution(chips)))

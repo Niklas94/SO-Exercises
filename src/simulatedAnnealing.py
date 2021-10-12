@@ -2,18 +2,14 @@ import random
 import math
 import copy
 
-# Weights
-
-nonFeasibleWeight = 100000
-taskCountWeight = 100
-orderWeight = 200
 
 # Algorithm 5 - Exercises week 37
 def simulatedAnnealing(initialSolution):
-    T = 100000000000000000000  # Temperature - Fixed value
+    T = 100000000  # Temperature - Fixed value
     r = 0.9999    # Pick value between 0.8 - 0.99
     C = initialSolution
     curr_best = copy.deepcopy(initialSolution)
+    tried = 0
 
     while (T > 1):
         print(T)
@@ -22,18 +18,21 @@ def simulatedAnnealing(initialSolution):
         if (AccProbability(Cost(C), Cost(CP), T) > prob):
             # print("Curr best: " + str(Cost(curr_best)))
             # print("Picking " + str(Cost(CP)) + " over " + str(Cost(C)))
+            tried += 1
             C = CP
-            if (isSolution(C)):
+            feasible = isSolution(C)
+            if (feasible and Cost(curr_best) > Cost(C)):
                 curr_best = copy.deepcopy(C)
         T = T * r
 
+    print("Tried " + str(tried) + " different solutions.")
     return curr_best
 
 # Find 'nearby' solution
 def neighbourhood (chips):
     c = copy.deepcopy(chips)
 
-    for i in range (0,5):
+    for i in range (0,1):
         # find first random core
         tChoice = []
         while len(tChoice) == 0:
@@ -72,13 +71,6 @@ def neighbourhood (chips):
             rTask = task
             task = tmp
 
-    # sort tasks by deadline in cores before returning solution
-    # for chip in c:
-    #    for coreID in chip.Cores:
-    #        tD = copy.deepcopy(chip.Cores[coreID].Tasks)
-    #        chip.Cores[coreID].Tasks = dict(sorted(tD.items(), key = lambda x :
-    #                                               int(x[1].Deadline)))
-
     return c
 
 
@@ -91,17 +83,21 @@ def AccProbability(costCurrent, costNeighbour, T):
 
 # Penalty function
 def Cost(chips):
+    # Weights
+    nonFeasibleWeight = 100000
+    taskCountWeight = 100
+    orderWeight = 200
     cost = 0
 
     for chip in chips:
         for coreID in chip.Cores:
             taskCount = 0
             curr_core = chip.Cores[coreID]
-            
+
             prevTaskDeadline = 0
             prevTaskWCET = 0
             numUnordered = 0
-            
+
             for taskId in curr_core.Tasks:
                 curr_task = curr_core.Tasks[taskId]
                 # If tasks are not ordered according to deadline, then penalize (we want lowest deadline first)
@@ -113,7 +109,7 @@ def Cost(chips):
                     if int(curr_task.WCET) > prevTaskWCET:
                         cost += 1 + numUnordered * orderWeight
                         numUnordered += 1
-                
+
                 prevTaskDeadline = int(curr_task.Deadline)
                 prevTaskWCET = int(curr_task.WCET)
 
@@ -125,32 +121,31 @@ def Cost(chips):
                 cost += float(curr_core.WCETFactor) * float(curr_task.WCET)
 
     # If neighbour is not a solution, add massive penalty
-    if (not isSolution(chips)):
-        cost += 1000000
+    feasible = isSolution(chips)
+    if (not feasible):
+        cost += nonFeasibleWeight
 
     return cost
 
 # Checks if solution is scheduble 
 def isSolution(solution):
+    feasible = True
     for chip in solution:
         for coreID in chip.Cores:
             # WCETFactor & Tasks
-            acc = 0.0
+            i = 0.0
             curr_core = chip.Cores[coreID]
-            tl = 0
 
             for taskId in curr_core.Tasks:
                 curr_task = chip.Cores[coreID].Tasks[taskId]
-                
-                responseTime = acc + float(curr_core.WCETFactor) * float(curr_task.WCET) # How long the task takes in this specific core
-                acc = 0
-                tl += float(curr_task.Deadline) - responseTime
-                acc += responseTime
-                # response = acc + float(curr_core.WCETFactor) * float(curr_task.WCET)
-                # acc = 0
-                # acc += float(curr_task.WCET) * float(curr_core.WCETFactor)
 
+                responseTime = i + float(curr_core.WCETFactor) * float(curr_task.WCET) # How long the task takes in this specific core
+                i = responseTime
+
+                # print(str(responseTime) + " > " + curr_task.Deadline)
                 if responseTime > float(curr_task.Deadline):
-                    return False
+                    feasible = False
+                    # print("Failed on " + taskId + " with " + str(responseTime) + " > " + curr_task.Deadline + " being false.")
+                    return feasible
 
-    return True
+    return feasible
