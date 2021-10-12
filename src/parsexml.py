@@ -6,7 +6,7 @@ from simulatedAnnealing import *
 tasks = []
 chips = []
 c_t = {}
-tree = ET.parse('../medium.xml')
+tree = ET.parse('./medium.xml')
 root = tree.getroot()
 
 
@@ -33,12 +33,18 @@ class Core:
         self.Id = Id
         self.WCETFactor = WCETFactor
         self.Tasks = {}
+        self.TasksList = []
+
+    #337413.7
+    #286176.2
 
     def addTask(self, Task):
         self.Tasks[Task.Id] = Task
+        self.TasksList.append(Task)
 
     def removeTask(self, Task):
         del self.Tasks[Task.Id]
+        self.TasksList.remove(Task)
 
     def __str__(self):
         string = " coreId : " + self.Id + ", WCETFactor: " + self.WCETFactor
@@ -52,6 +58,10 @@ class Core:
         if isinstance(other, Core):
             return self.Id == other.Id and self.WCETFactor == other.WCETFactor and self.Tasks == other.Tasks
         return False
+    
+    def sortList(self):
+        self.TasksList.sort(key=lambda x: (x.Deadline, -int(x.WCET)))    # source : https://www.techiedelight.com/sort-list-of-objects-by-multiple-attributes-python/
+
 
 class Chip:
 
@@ -103,7 +113,12 @@ for item in tasks:
 
     randomChip.Cores[CoreId].addTask(item)
 
-
+# Sort tasks in initial solution
+# for chip in chips:
+#     for coreID in chip.Cores:
+#         curr_core = chip.Cores[coreID]
+#         curr_core.sortList()
+            
 print('randomizedSolution is a solution: ', str(isSolution(chips)))
 
 # get cost before, run SA, get cost after and print solution
