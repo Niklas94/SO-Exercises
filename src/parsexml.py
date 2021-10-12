@@ -6,7 +6,7 @@ from simulatedAnnealing import *
 tasks = []
 chips = []
 c_t = {}
-tree = ET.parse('./medium.xml')
+tree = ET.parse('../large.xml')
 root = tree.getroot()
 
 
@@ -120,6 +120,10 @@ for item in tasks:
 #         curr_core.sortList()
             
 print('randomizedSolution is a solution: ', str(isSolution(chips)))
+
+# 178610.1 - 1
+# 178595.1 - 2
+# 178595.9 - 3
 
 # get cost before, run SA, get cost after and print solution
 c = Cost(chips)

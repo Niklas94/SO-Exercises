@@ -5,8 +5,8 @@ import copy
 
 # Algorithm 5 - Exercises week 37
 def simulatedAnnealing(initialSolution):
-    T = 10000000000  # Temperature - Fixed value
-    r = 0.9999    # Pick value between 0.8 - 0.99
+    T = 100000000000  # Temperature - Fixed value
+    r = 0.999    # Pick value between 0.8 - 0.99
     C = initialSolution
     curr_best = copy.deepcopy(initialSolution)
     tried = 0
@@ -61,15 +61,15 @@ def neighbourhood (chips):
         # half the time move random task, half the time swap 2 random tasks
         prob = random.uniform(0,1)
         #print(prob)
-        if (0.33 > prob ):
+        if (0.5 > prob ):
             # remove task from old core
             randomChip.Cores[CoreId].removeTask(task)
             # add task to new core
             rChip.Cores[rCoreId].addTask(task)            
             
-        elif 0.33 < prob and prob < 0.66:
-            # sort a cores tasks
-            rChip.Cores[rCoreId].sortList()
+        # elif 0.33 < prob and prob < 0.66:
+        #     # sort a cores tasks
+        #     rChip.Cores[rCoreId].sortList()
             
         else:
             # have to find a non-empty second core to be able to swap
@@ -84,6 +84,16 @@ def neighbourhood (chips):
             tmp = copy.deepcopy(rTask)
             rTask = task
             task = tmp
+
+    # Sort the neighbour at the end
+    for chip in c:
+        for coreId in chip.Cores:
+            curr_core = chip.Cores[coreId]
+            curr_core.sortList()
+	    #for coreID in chip.Cores:
+        #    print(coreID)
+            #curr_core = chip.Cores[coreID]
+            #curr_core.sortList()
 
     return c
 
