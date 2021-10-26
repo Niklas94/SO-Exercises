@@ -2,11 +2,12 @@ import xml.etree.ElementTree as ET
 from operator import attrgetter
 import random
 from simulatedAnnealing import *
+from xml.dom import minidom
 
 tasks = []
 chips = []
 c_t = {}
-tree = ET.parse('../small.xml')
+tree = ET.parse('../medium.xml')
 root = tree.getroot()
 
 
@@ -35,9 +36,6 @@ class Core:
         self.Tasks = {}
         self.TasksList = []
 
-    #337413.7
-    #286176.2
-
     def addTask(self, Task):
         self.Tasks[Task.Id] = Task
         self.TasksList.append(Task)
@@ -58,7 +56,7 @@ class Core:
         if isinstance(other, Core):
             return self.Id == other.Id and self.WCETFactor == other.WCETFactor and self.Tasks == other.Tasks
         return False
-    
+
     def sortList(self):
         self.TasksList.sort(key=lambda x: (x.Deadline, -int(x.WCET)))    # source : https://www.techiedelight.com/sort-list-of-objects-by-multiple-attributes-python/
 
@@ -113,28 +111,33 @@ for item in tasks:
 
     randomChip.Cores[CoreId].addTask(item)
 
-# Sort tasks in initial solution
-# for chip in chips:
-#     for coreID in chip.Cores:
-#         curr_core = chip.Cores[coreID]
-#         curr_core.sortList()
-
-# 178610.1 - 1
-# 178595.1 - 2
-# 178595.9 - 3
 
 # get cost before, run SA, get cost after and print solution
 c = Cost(chips)
 new = simulatedAnnealing(chips)
-print("")
 lax = []
-for chip in new:
-    print(chip)
-print("")
-print("Is init a solution: " + str(isSolution(chips, [])))
-print("Is result a solution: " + str(isSolution(new, lax)))
-print("")
-print(c)
-print("-------------------------------")
-print(Cost(new))
-print("Total laxity: " + str(lax[0]))
+
+if (isSolution(new, lax)):
+    print("Solution found. Check solution.xml for result.")
+    data = ET.Element('solution')
+
+    for chip in new:
+        for coreID in chip.Cores:
+            curr_core = chip.Cores[coreID]  # Get current core
+            i = 0.0
+            for t in curr_core.TasksList:   # Get all tasks for that core
+                responseTime = i + float(curr_core.WCETFactor) * float(t.WCET) # How long the task takes in this specific core
+                i = responseTime
+                task = ET.SubElement(data, 'Tasks')
+                task.set('id', t.Id)
+                task.set('MCP', chip.Id)
+                task.set('Core', coreID)
+                task.set('WCRT', str(int(responseTime)))
+
+    xmlstr = minidom.parseString(ET.tostring(data, encoding='unicode', method='xml')).toprettyxml(indent="   ")
+
+    outfile = open("solution.xml", "w")
+    outfile.write(xmlstr)
+    outfile.write("<!-- Total Laxity: " + str(int(lax[0])) + " -->")
+else:
+    print("Solution could not be found.")

@@ -6,7 +6,7 @@ import copy
 # Algorithm 5 - Exercises week 37
 def simulatedAnnealing(initialSolution):
     T = 1000000000  # Temperature - Fixed value
-    r = 0.999    # Pick value between 0.8 - 0.99
+    r = 0.995    # Pick value between 0.8 - 0.99
     C = initialSolution
     curr_best = copy.deepcopy(initialSolution)
     tried = 0
@@ -23,12 +23,12 @@ def simulatedAnnealing(initialSolution):
             # print("Picking " + str(Cost(CP)) + " over " + str(Cost(C)))
             tried += 1
             C = CP
-            feasible = isSolution(C, [])
+            feasible = isSolution(C)
             if (feasible and Cost(curr_best) > Cost(C)):    # New solution is feasible and better than current
                 curr_best = copy.deepcopy(C)
-            elif (feasible and not isSolution(curr_best, [])):  # New solution is feasible while current is not feasible
+            elif (feasible and not isSolution(curr_best)):  # New solution is feasible while current is not feasible
                 curr_best = copy.deepcopy(C)
-            elif (not feasible and not isSolution(curr_best, []) and Cost(curr_best) > Cost(C)):    # both new and current are not feasible but new is better than current
+            elif (not feasible and not isSolution(curr_best) and Cost(curr_best) > Cost(C)):    # both new and current are not feasible but new is better than current
                 curr_best = copy.deepcopy(C)
 
         T = T * r
@@ -60,16 +60,11 @@ def neighbourhood (chips):
 
         # half the time move random task, half the time swap 2 random tasks
         prob = random.uniform(0,1)
-        #print(prob)
         if (0.5 > prob ):
             # remove task from old core
             randomChip.Cores[CoreId].removeTask(task)
             # add task to new core
             rChip.Cores[rCoreId].addTask(task)
-
-        # elif 0.33 < prob and prob < 0.66:
-        #     # sort a cores tasks
-        #     rChip.Cores[rCoreId].sortList()
 
         else:
             # have to find a non-empty second core to be able to swap
@@ -90,10 +85,6 @@ def neighbourhood (chips):
         for coreId in chip.Cores:
             curr_core = chip.Cores[coreId]
             curr_core.sortList()
-        #for coreID in chip.Cores:
-        #    print(coreID)
-        #curr_core = chip.Cores[coreID]
-        #curr_core.sortList()
 
     return c
 
@@ -124,64 +115,33 @@ def Cost(chips):
 
             # iterating over list
 
-            for e in curr_core.TasksList:
-                if int(e.Deadline) < prevTaskDeadline and prevTaskDeadline != 0:
+            for t in curr_core.TasksList:
+                if int(t.Deadline) < prevTaskDeadline and prevTaskDeadline != 0:
                     cost += 1 + numUnordered * orderWeight
                     numUnordered += 1
 
-                elif int(e.Deadline) == prevTaskDeadline:
-                    if int(e.WCET) > prevTaskWCET:
+                elif int(t.Deadline) == prevTaskDeadline:
+                    if int(t.WCET) > prevTaskWCET:
                         cost += 1 + numUnordered * orderWeight
                         numUnordered += 1
 
-                prevTaskDeadline = int(e.Deadline)
-                prevTaskWCET = int(e.WCET)
+                prevTaskDeadline = int(t.Deadline)
+                prevTaskWCET = int(t.WCET)
 
                 taskCount += 1
                 cost += taskCount * taskCountWeight
-                cost += float(curr_core.WCETFactor) * float(e.WCET)
-
-            # # iterating over dict
-            # for taskId in curr_core.Tasks:
-            #     curr_task = curr_core.Tasks[taskId]
-            #     # If tasks are not ordered according to deadline, then penalize (we want lowest deadline first)
-            #     if int(curr_task.Deadline) < prevTaskDeadline and prevTaskDeadline != 0:
-            #          cost += 1 + numUnordered * orderWeight
-            #          numUnordered += 1
-            #     # If tasks have same deadline, but unordered according to WCET, then penalize as well (we want highest WCET first)
-            #     elif int(curr_task.Deadline) == prevTaskDeadline:
-            #         if int(curr_task.WCET) > prevTaskWCET:
-            #             cost += 1 + numUnordered * orderWeight
-            #             numUnordered += 1
-
-            #     prevTaskDeadline = int(curr_task.Deadline)
-            #     prevTaskWCET = int(curr_task.WCET)
-
-            #     taskCount += 1
-            #     # Penalize depending on amount of tasks in core (1, 3, 6, 10, 15, 21...)
-            #     cost += taskCount * taskCountWeight
-            #     # hopefully this means that tasks with horrible WCET will get
-            #     # tasked to fast cores
-            #     cost += float(curr_core.WCETFactor) * float(curr_task.WCET)
-            #print('cost for core:', coreID, cost)
-            #print('cost before WCET : ', cost)
-
-            #print('cost of unordered, WCET and taskCount: ', 1 + numUnordered * orderWeight, float(curr_core.WCETFactor) * float(curr_task.WCET), taskCount * taskCountWeight)
-
+                cost += float(curr_core.WCETFactor) * float(t.WCET)
 
 
     # If neighbour is not a solution, add massive penalty
-    feasible = isSolution(chips, [])
+    feasible = isSolution(chips)
     if (not feasible):
         cost += nonFeasibleWeight
-
-    #print('total cost: ')
-    #print(cost)
 
     return cost
 
 # Checks if solution is scheduble 
-def isSolution(solution, lax):
+def isSolution(solution, lax=[]):
     tl = 0
     feasible = True
     for chip in solution:
@@ -190,15 +150,12 @@ def isSolution(solution, lax):
             i = 0.0
             curr_core = chip.Cores[coreID]
 
-            for e in curr_core.TasksList:
-                # curr_task = chip.Cores[coreID].Tasks[taskId]
-
-                responseTime = i + float(curr_core.WCETFactor) * float(e.WCET) # How long the task takes in this specific core
+            for t in curr_core.TasksList:
+                responseTime = i + float(curr_core.WCETFactor) * float(t.WCET) # How long the task takes in this specific core
                 i = responseTime
                 tl += i
 
-                # print(str(responseTime) + " > " + curr_task.Deadline)
-                if responseTime > float(e.Deadline):
+                if responseTime > float(t.Deadline):
                     feasible = False
 
     lax.append(tl)
