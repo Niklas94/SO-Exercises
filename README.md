@@ -12,7 +12,7 @@ annealing is run on it. If a solution is found, the result is written into the
 will inform of this.
 
 ## How to run
-The input file has to be put into the same directory as the **parsexml.py**
-file. The input file to be run on can be changed in the **parsexml.py** file at
-the top. To run the code simply run parsexml.py with python by issuing the
-command ``python parsexml.py''.
+The input file has to be put up one level from the  **parsexml.py** file. The
+input file to be run on can be changed in the **parsexml.py** file at the top.
+To run the code simply run parsexml.py with python by issuing the command
+``python parsexml.py''.
