@@ -6,7 +6,7 @@ from simulatedAnnealing import *
 tasks = []
 chips = []
 c_t = {}
-tree = ET.parse('../large.xml')
+tree = ET.parse('../medium.xml')
 root = tree.getroot()
 
 
@@ -138,3 +138,27 @@ print("")
 print(c)
 print("-------------------------------")
 print(Cost(new))
+
+data = ET.Element('solution')
+
+for chip in new:
+    for coreID in chip.Cores:
+        curr_core = chip.Cores[coreID]  # Get current core
+        i = 0.0
+        for T in curr_core.TasksList:   # Get all tasks for that core
+            responseTime = i + float(curr_core.WCETFactor) * float(T.WCET) # How long the task takes in this specific core
+            i = responseTime
+            task = ET.SubElement(data, 'Tasks')
+            task.set('id', T.Id)
+            task.set('MCP', chip.Id)
+            task.set('Core', coreID)
+            task.set('WCRT', responseTime)
+
+mydata = ET.tostring(data, encoding='unicode', method='xml')
+myfile = open("solution.xml", "w")
+myfile.write(mydata)
+
+        
+        
+
+	

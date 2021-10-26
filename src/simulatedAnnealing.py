@@ -5,8 +5,8 @@ import copy
 
 # Algorithm 5 - Exercises week 37
 def simulatedAnnealing(initialSolution):
-    T = 100000000000  # Temperature - Fixed value
-    r = 0.999    # Pick value between 0.8 - 0.99
+    T = 10000000  # Temperature - Fixed value
+    r = 0.995    # Pick value between 0.8 - 0.99
     C = initialSolution
     curr_best = copy.deepcopy(initialSolution)
     tried = 0
