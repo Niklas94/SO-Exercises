@@ -6,7 +6,7 @@ from simulatedAnnealing import *
 tasks = []
 chips = []
 c_t = {}
-tree = ET.parse('../large.xml')
+tree = ET.parse('../small.xml')
 root = tree.getroot()
 
 
@@ -118,8 +118,6 @@ for item in tasks:
 #     for coreID in chip.Cores:
 #         curr_core = chip.Cores[coreID]
 #         curr_core.sortList()
-            
-print('randomizedSolution is a solution: ', str(isSolution(chips)))
 
 # 178610.1 - 1
 # 178595.1 - 2
@@ -129,12 +127,14 @@ print('randomizedSolution is a solution: ', str(isSolution(chips)))
 c = Cost(chips)
 new = simulatedAnnealing(chips)
 print("")
+lax = []
 for chip in new:
     print(chip)
 print("")
-print("Is init a solution: " + str(isSolution(chips)))
-print("Is result a solution: " + str(isSolution(new)))
+print("Is init a solution: " + str(isSolution(chips, [])))
+print("Is result a solution: " + str(isSolution(new, lax)))
 print("")
 print(c)
 print("-------------------------------")
 print(Cost(new))
+print("Total laxity: " + str(lax[0]))

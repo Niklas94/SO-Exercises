@@ -5,7 +5,7 @@ import copy
 
 # Algorithm 5 - Exercises week 37
 def simulatedAnnealing(initialSolution):
-    T = 100000000000  # Temperature - Fixed value
+    T = 1000000000  # Temperature - Fixed value
     r = 0.999    # Pick value between 0.8 - 0.99
     C = initialSolution
     curr_best = copy.deepcopy(initialSolution)
@@ -23,14 +23,14 @@ def simulatedAnnealing(initialSolution):
             # print("Picking " + str(Cost(CP)) + " over " + str(Cost(C)))
             tried += 1
             C = CP
-            feasible = isSolution(C)
+            feasible = isSolution(C, [])
             if (feasible and Cost(curr_best) > Cost(C)):    # New solution is feasible and better than current
                 curr_best = copy.deepcopy(C)
-            elif (feasible and not isSolution(curr_best)):  # New solution is feasible while current is not feasible
+            elif (feasible and not isSolution(curr_best, [])):  # New solution is feasible while current is not feasible
                 curr_best = copy.deepcopy(C)
-            elif (not feasible and not isSolution(curr_best) and Cost(curr_best) > Cost(C)):    # both new and current are not feasible but new is better than current
+            elif (not feasible and not isSolution(curr_best, []) and Cost(curr_best) > Cost(C)):    # both new and current are not feasible but new is better than current
                 curr_best = copy.deepcopy(C)
-            
+
         T = T * r
         print_counter += 1
 
@@ -65,12 +65,12 @@ def neighbourhood (chips):
             # remove task from old core
             randomChip.Cores[CoreId].removeTask(task)
             # add task to new core
-            rChip.Cores[rCoreId].addTask(task)            
-            
+            rChip.Cores[rCoreId].addTask(task)
+
         # elif 0.33 < prob and prob < 0.66:
         #     # sort a cores tasks
         #     rChip.Cores[rCoreId].sortList()
-            
+
         else:
             # have to find a non-empty second core to be able to swap
             while len(rtChoice) == 0:
@@ -90,10 +90,10 @@ def neighbourhood (chips):
         for coreId in chip.Cores:
             curr_core = chip.Cores[coreId]
             curr_core.sortList()
-	    #for coreID in chip.Cores:
+        #for coreID in chip.Cores:
         #    print(coreID)
-            #curr_core = chip.Cores[coreID]
-            #curr_core.sortList()
+        #curr_core = chip.Cores[coreID]
+        #curr_core.sortList()
 
     return c
 
@@ -123,11 +123,11 @@ def Cost(chips):
             numUnordered = 0
 
             # iterating over list
-            
+
             for e in curr_core.TasksList:
                 if int(e.Deadline) < prevTaskDeadline and prevTaskDeadline != 0:
-                     cost += 1 + numUnordered * orderWeight
-                     numUnordered += 1
+                    cost += 1 + numUnordered * orderWeight
+                    numUnordered += 1
 
                 elif int(e.Deadline) == prevTaskDeadline:
                     if int(e.WCET) > prevTaskWCET:
@@ -140,7 +140,7 @@ def Cost(chips):
                 taskCount += 1
                 cost += taskCount * taskCountWeight
                 cost += float(curr_core.WCETFactor) * float(e.WCET)
-                
+
             # # iterating over dict
             # for taskId in curr_core.Tasks:
             #     curr_task = curr_core.Tasks[taskId]
@@ -165,13 +165,13 @@ def Cost(chips):
             #     cost += float(curr_core.WCETFactor) * float(curr_task.WCET)
             #print('cost for core:', coreID, cost)
             #print('cost before WCET : ', cost)
-            
-                #print('cost of unordered, WCET and taskCount: ', 1 + numUnordered * orderWeight, float(curr_core.WCETFactor) * float(curr_task.WCET), taskCount * taskCountWeight)
+
+            #print('cost of unordered, WCET and taskCount: ', 1 + numUnordered * orderWeight, float(curr_core.WCETFactor) * float(curr_task.WCET), taskCount * taskCountWeight)
 
 
 
     # If neighbour is not a solution, add massive penalty
-    feasible = isSolution(chips)
+    feasible = isSolution(chips, [])
     if (not feasible):
         cost += nonFeasibleWeight
 
@@ -181,7 +181,8 @@ def Cost(chips):
     return cost
 
 # Checks if solution is scheduble 
-def isSolution(solution):
+def isSolution(solution, lax):
+    tl = 0
     feasible = True
     for chip in solution:
         for coreID in chip.Cores:
@@ -194,9 +195,12 @@ def isSolution(solution):
 
                 responseTime = i + float(curr_core.WCETFactor) * float(e.WCET) # How long the task takes in this specific core
                 i = responseTime
+                tl += i
 
                 # print(str(responseTime) + " > " + curr_task.Deadline)
                 if responseTime > float(e.Deadline):
                     feasible = False
 
+    lax.append(tl)
     return feasible
+
