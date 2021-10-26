@@ -33,29 +33,21 @@ class Core:
     def __init__(self, Id, WCETFactor):
         self.Id = Id
         self.WCETFactor = WCETFactor
-        self.Tasks = {}
         self.TasksList = []
 
     def addTask(self, Task):
-        self.Tasks[Task.Id] = Task
         self.TasksList.append(Task)
 
     def removeTask(self, Task):
-        del self.Tasks[Task.Id]
         self.TasksList.remove(Task)
 
     def __str__(self):
         string = " coreId : " + self.Id + ", WCETFactor: " + self.WCETFactor
 
-        for Id in self.Tasks:
-            print(self.Tasks[Id])
+        for task in self.TasksList:
+            print(task)
 
         return string
-
-    def __eq__(self, other):
-        if isinstance(other, Core):
-            return self.Id == other.Id and self.WCETFactor == other.WCETFactor and self.Tasks == other.Tasks
-        return False
 
     def sortList(self):
         self.TasksList.sort(key=lambda x: (x.Deadline, -int(x.WCET)))    # source : https://www.techiedelight.com/sort-list-of-objects-by-multiple-attributes-python/

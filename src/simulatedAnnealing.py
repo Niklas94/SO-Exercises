@@ -43,20 +43,21 @@ def neighbourhood (chips):
 
     for i in range (0,1):
         # find first random core
-        tChoice = []
-        while len(tChoice) == 0:
+        tList = []
+        while (len(tList) == 0):
             randomChip = random.choice(c)
             choice = list(randomChip.Cores.keys())
             CoreId = random.choice(choice)
-            tChoice = list(randomChip.Cores[CoreId].Tasks.keys())
+            if (len(randomChip.Cores[CoreId].TasksList) > 0):
+                tList = randomChip.Cores[CoreId].TasksList
 
-        task = randomChip.Cores[CoreId].Tasks[random.choice(tChoice)]
+        task = random.choice(tList)
 
         # find second random core
         rChip = random.choice(c)
         rChoice = list(rChip.Cores.keys())
         rCoreId = random.choice(rChoice)
-        rtChoice = []
+        rtList = []
 
         # half the time move random task, half the time swap 2 random tasks
         prob = random.uniform(0,1)
@@ -68,13 +69,14 @@ def neighbourhood (chips):
 
         else:
             # have to find a non-empty second core to be able to swap
-            while len(rtChoice) == 0:
+            while len(rtList) == 0:
                 rChip = random.choice(c)
                 rChoice = list(rChip.Cores.keys())
                 rCoreId = random.choice(rChoice)
-                rtChoice = list(rChip.Cores[rCoreId].Tasks.keys())
+                if (len(rChip.Cores[rCoreId].TasksList) > 0):
+                    rtList = rChip.Cores[rCoreId].TasksList
 
-            rTask = rChip.Cores[rCoreId].Tasks[random.choice(rtChoice)]
+            rTask = random.choice(rtList)
 
             tmp = copy.deepcopy(rTask)
             rTask = task
