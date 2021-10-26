@@ -2,7 +2,6 @@ import random
 import math
 import copy
 
-
 # Algorithm 5 - Exercises week 37
 def simulatedAnnealing(initialSolution):
     T = 1000000000  # Temperature - Fixed value
@@ -14,13 +13,11 @@ def simulatedAnnealing(initialSolution):
 
     while (T > 1):
         if print_counter % 1000 == 0:
-            print('T equal: ', T)
+            print('T: ', T)
             print_counter = 0
         CP = neighbourhood(C)
         prob = random.uniform(0,1)
         if (AccProbability(Cost(C), Cost(CP), T) > prob):
-            # print("Curr best: " + str(Cost(curr_best)))
-            # print("Picking " + str(Cost(CP)) + " over " + str(Cost(C)))
             tried += 1
             C = CP
             feasible = isSolution(C)
@@ -91,7 +88,8 @@ def neighbourhood (chips):
     return c
 
 
-# Something
+# Probability function which will allow inferior solutions. The lower T, the
+# less likelyhood of choosing inferior solutions.
 def AccProbability(costCurrent, costNeighbour, T):
     if (costCurrent > costNeighbour):
         return 1.1
@@ -115,13 +113,14 @@ def Cost(chips):
             prevTaskWCET = 0
             numUnordered = 0
 
-            # iterating over list
-
             for t in curr_core.TasksList:
+                # Penalize if tasks are unordered according to deadline in core
                 if int(t.Deadline) < prevTaskDeadline and prevTaskDeadline != 0:
                     cost += 1 + numUnordered * orderWeight
                     numUnordered += 1
 
+                # If they have the same deadline, penalize for unordered
+                # according to WCET
                 elif int(t.Deadline) == prevTaskDeadline:
                     if int(t.WCET) > prevTaskWCET:
                         cost += 1 + numUnordered * orderWeight
@@ -131,9 +130,10 @@ def Cost(chips):
                 prevTaskWCET = int(t.WCET)
 
                 taskCount += 1
+                # The more tasks on a core, the bigger the penalty
                 cost += taskCount * taskCountWeight
+                # Prioritize having slow tasks on fast cores
                 cost += float(curr_core.WCETFactor) * float(t.WCET)
-
 
     # If neighbour is not a solution, add massive penalty
     feasible = isSolution(chips)
@@ -148,18 +148,20 @@ def isSolution(solution, lax=[]):
     feasible = True
     for chip in solution:
         for coreID in chip.Cores:
-            # WCETFactor & Tasks
             i = 0.0
             curr_core = chip.Cores[coreID]
 
             for t in curr_core.TasksList:
-                responseTime = i + float(curr_core.WCETFactor) * float(t.WCET) # How long the task takes in this specific core
+                # How long the task takes in this specific core
+                responseTime = i + float(curr_core.WCETFactor) * float(t.WCET) 
                 i = responseTime
                 tl += i
 
                 if responseTime > float(t.Deadline):
                     feasible = False
 
+    # as lax is called by reference, we can use this total laxity score outside
+    # the function
     lax.append(tl)
     return feasible
 

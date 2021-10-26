@@ -6,15 +6,10 @@ from xml.dom import minidom
 
 tasks = []
 chips = []
-c_t = {}
 tree = ET.parse('../large.xml')
 root = tree.getroot()
 
-
-# Reading from xml
-
 class Task:
-
     def __init__(self, Id, Period, Deadline, WCET):
         self.Id = Id
         self.Period = Period
@@ -29,7 +24,6 @@ class Task:
             return self.Id == other.Id
 
 class Core:
-
     def __init__(self, Id, WCETFactor):
         self.Id = Id
         self.WCETFactor = WCETFactor
@@ -43,18 +37,14 @@ class Core:
 
     def __str__(self):
         string = " coreId : " + self.Id + ", WCETFactor: " + self.WCETFactor
-
         for task in self.TasksList:
             print(task)
-
         return string
 
     def sortList(self):
         self.TasksList.sort(key=lambda x: (x.Deadline, -int(x.WCET)))    # source : https://www.techiedelight.com/sort-list-of-objects-by-multiple-attributes-python/
 
-
 class Chip:
-
     def __init__(self, Id):
         self.Id = Id
         self.Cores = {}
@@ -64,18 +54,14 @@ class Chip:
 
     def __str__(self):
         string = "Chip ID: " + self.Id
-
         for Id in self.Cores:
             print(self.Cores[Id])
-
         return string
 
     def __eq__(self, other):
         if isinstance(other, Chip):
             return self.Id == other.Id and self.Cores == other.Cores
         return False
-
-
 
 for child in root:
     if child.tag == "Application":
@@ -96,17 +82,14 @@ for child in root:
 # Randomize initial solution
 for item in tasks:
     randomChip = random.choice(chips)
-
     choice = list(randomChip.Cores.keys())
-
     CoreId = random.choice(choice)
-
     randomChip.Cores[CoreId].addTask(item)
 
-
-# get cost before, run SA, get cost after and print solution
-c = Cost(chips)
+# Run simulated annealing on the initial solution
 new = simulatedAnnealing(chips)
+# Lax is used to get the total laxity. We use it in the isSolution function
+# where we pass it by reference.
 lax = []
 
 if (isSolution(new, lax)):
