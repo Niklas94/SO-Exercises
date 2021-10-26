@@ -7,8 +7,9 @@ System Optimization Exercises
 The Simulated Annealing code is located in the **simulatedAnnealing.py** file,
 while the code that parses the XML input files and generates a solution is
 **parsexml.py**. Here a random initial solution is generated, simulated
-annealing is run on it, and the cost of the initial solution as well as the new
-one (if one was obtainable) is printed to the terminal.
+annealing is run on it. If a solution is found, the result is written into the
+**solution.xml** file. If no solution could be found, a print to the terminal
+will inform of this.
 
 ## How to run
 The input file has to be put into the same directory as the **parsexml.py**
