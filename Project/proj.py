@@ -14,14 +14,13 @@ def initSolution():
         # edges
         for e in vertices[curr].Egress:
             if e.Destination == msg.Destination:
-                ind = (vertices[curr].Egress).index(e)
-                curr = vertices[curr].Egress[ind].Destination
+                curr = e.Destination
 
-        l = len(vertices[curr].Egress)
-        c = random.randint(0,l)
         if curr == msg.Destination:
             d.append(curr)
         else:
+            l = len(vertices[curr].Egress)
+            c = random.randint(0,l)
             visited.append(curr)
             # If the randomly picked outgoing edge is already visited, pick another
             # random number
