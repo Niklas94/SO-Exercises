@@ -31,7 +31,7 @@ class Edge:
         self.Queue = 0
 
     def __str__(self):
-        return ("    Id: " + self.Id + ", Bandwidth: " + self.Bandwidth + ", PropDelay: " + self.PropDelay + ", Source: " + self.Source + ", Destination: " + self.Destination + ", Queue: " + str(self.Queue))
+        return ("Id: " + self.Id + ", Bandwidth: " + self.Bandwidth + ", PropDelay: " + self.PropDelay + ", Source: " + self.Source + ", Destination: " + self.Destination + ", Queue: " + str(self.Queue))
 
     def __eq__(self, other):
         if isinstance(other, Edge):
@@ -47,7 +47,7 @@ class Message:
         self.Deadline = Deadline
 
     def __str__(self):
-        return ("    Name: " + self.Name + ", Source: " + self.Source + ", Destination: " + self.Destination + ", Size: " + self.Size + ", Period: " + self.Period + ", Deadline: " + self.Deadline)
+        return ("Name: " + self.Name + ", Source: " + self.Source + ", Destination: " + self.Destination + ", Size: " + self.Size + ", Period: " + self.Period + ", Deadline: " + self.Deadline)
 
 class Msg2Route:
     def __init__(self, Name, Source, Destination):

@@ -11,6 +11,7 @@ def stuck(curr,visited):
     return ret
 
 
+# Generates an array of arrays. Each inner array is a route for a message.
 def initSolution():
     sol = []
     for m in msgs:
@@ -44,6 +45,7 @@ def initSolution():
                     curr = edge.Destination
                     break
 
+            # If we're not at the goal, get next vertex
             if curr != m.Destination:
                 visited.append(curr)
                 stack.append(curr)
@@ -53,6 +55,7 @@ def initSolution():
                     route.pop(len(route)-1)
                     stack.pop(len(stack)-1)
                     curr = stack[len(stack)-1]
+
                 e_len = len(vertices[curr].Egress)
                 ran_num = random.randint(1,e_len)
                 # If the randomly picked outgoing edge is already visited, pick
@@ -67,7 +70,3 @@ def initSolution():
 
 for r in initSolution():
     print(r)
-
-for v in vertices:
-    for e in vertices[v].Egress:
-        print(e)
