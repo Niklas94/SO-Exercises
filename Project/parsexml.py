@@ -6,6 +6,7 @@ from xml.dom import minidom
 
 vertices = {}
 edges = []
+msgs = []
 conf_tree = ET.parse('Config.xml')
 conf_root = conf_tree.getroot()
 app_tree = ET.parse('Apps.xml')
@@ -23,8 +24,8 @@ class Vertex:
             ret += "\n" + i.__str__() + ", "
         ret += "\nEgress: "
         for e in self.Egress:
-            ret + "\n" + e.__str__() + ", "
-        return ret + "\n"
+            ret += "\n" + e.__str__() + ", "
+        return ret + "\n\n"
 
 
 class Edge:
@@ -55,7 +56,6 @@ class Message:
         return ("    Name: " + self.Name + ", Source: " + self.Source + ", Destination: " + self.Destination + ", Size: " + self.Size + ", Period: " + self.Period + ", Deadline: " + self.Deadline)
 
 
-# print(conf_root)
 for child in conf_root:
     if child.tag == "Vertex":
         vertices[child.attrib['Name']] = Vertex(child.attrib['Name'])
@@ -64,34 +64,15 @@ for child in conf_root:
                             child.attrib['PropDelay'], child.attrib['Source'],
                             child.attrib['Destination'])
         edges.append(e)
-        # print(child.attrib['Source'])
-        # print(child.attrib['Destination'])
-        # print(vertices)
 
         vertices.get(child.attrib['Source']).Egress.append(e)
-
-
-        # .Egress.append(e)
         vertices.get(child.attrib['Destination']).Ingress.append(e)
 
-for v in vertices:
-    print(vertices[v])
+for child in app_root:
+    msgs.append(Message(child.attrib['Name'], child.attrib['Source'],
+                        child.attrib['Destination'], child.attrib['Size'],
+                        child.attrib['Period'], child.attrib['Deadline']))
 
-# for e in edges:
-#     print(e)
+for m in msgs:
+    print(m)
 
-#for child in root:
-##     if child.tag == "Application":
-#        for g_child in child:
-#            newTask = Task(Id=g_child.attrib['Id'], Period=g_child.attrib['Period'], Deadline=g_child.attrib['Deadline'], WCET=g_child.attrib['WCET'])
-#            tasks.append(newTask)
-
-#    if child.tag == "Platform":
-#        for g_child in child:
-#            #Ini Chips
-#            newChip = Chip(g_child.attrib['Id'])
-#            for g_g_child in g_child:
-#                #Ini Cores
-#                newCore = Core(Id=g_g_child.attrib['Id'], WCETFactor=g_g_child.attrib['WCETFactor'])
-#                newChip.addCore(newCore)    #TODO remove newCore.Id from the value field
-#            chips.append(newChip)
