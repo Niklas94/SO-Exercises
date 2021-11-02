@@ -17,7 +17,6 @@ def initSolution():
     visited = []
     route = [vertices[curr].Name]
     stack = []
-    done = 0
 
     while (curr != msg.Destination):
         # Check if the search destination is the destination of one of the outgoing
@@ -25,10 +24,9 @@ def initSolution():
         for edge in vertices[curr].Egress:
             if edge.Destination == msg.Destination:
                 curr = edge.Destination
-                done = 1
                 break
 
-        if not done:
+        if curr != msg.Destination:
             visited.append(curr)
             stack.append(curr)
             # If stuck go back to the node you just came from and try another
