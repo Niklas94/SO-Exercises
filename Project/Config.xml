@@ -16,6 +16,8 @@
 	</Edge>
 	<Edge Id="4" BW="1000" PropDelay="10" Source="SW2" Destination="ES2">
 	</Edge>
-	<Edge Id="5" BW="1000" PropDelay="10" Source="SW2" Destination="SW1">
+	<Edge Id="5" BW="1000" PropDelay="10" Source="ES2" Destination="SW1">
+	</Edge>
+	<Edge Id="6" BW="1000" PropDelay="10" Source="SW1" Destination="ES1">
 	</Edge>
 </Architecture>

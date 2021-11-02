@@ -1,7 +1,7 @@
 from parsexml import *
 import copy
 
-vertices, edges, msgs = parse()
+vertices, edges, msgs = parse("Config.xml", "Apps.xml")
 
 def stuck(curr,visited):
     ret = True
@@ -12,38 +12,62 @@ def stuck(curr,visited):
 
 
 def initSolution():
-    msg = msgs[0]
-    curr = msg.Source
-    visited = []
-    route = [vertices[curr].Name]
-    stack = []
+    sol = []
+    for m in msgs:
+        curr = m.Source
+        visited = []
+        route = [vertices[curr].Name]
+        stack = []
 
-    while (curr != msg.Destination):
-        # Check if the search destination is the destination of one of the outgoing
-        # edges
-        for edge in vertices[curr].Egress:
-            if edge.Destination == msg.Destination:
-                curr = edge.Destination
-                break
+        while (curr != m.Destination):
+            # check if the edges going out of current vertex are already
+            # assigned to queues. If not, pick random queues from 1 to the total
+            # number of outgoing edges to assign each edge. Do not allow
+            # duplicate queue numbers by checking if randomly generated value is
+            # already used earlier.
+            unset = vertices[curr].Egress[0].Queue == 0
+            if unset:
+                e_len = len(vertices[curr].Egress)
+                assigned = []
+                for i in range (0, e_len):
+                    while(True):
+                        rand = random.randint(1,e_len)
+                        if rand not in assigned:
+                            break
+                    assigned.append(rand)
+                    vertices[curr].Egress[i].Queue = rand
 
-        if curr != msg.Destination:
-            visited.append(curr)
-            stack.append(curr)
-            # If stuck go back to the node you just came from and try another
-            # way
-            while stuck(curr,visited):
-                route.pop(len(route)-1)
-                stack.pop(len(stack)-1)
-                curr = stack[len(stack)-1]
-            e_len = len(vertices[curr].Egress)
-            ran_num = random.randint(1,e_len)
-            # If the randomly picked outgoing edge is already visited, pick another
-            # random number
-            while (vertices[curr].Egress[ran_num-1].Destination in visited):
+            # Check if the search destination is the destination of one of the
+            # outgoing edges
+            for edge in vertices[curr].Egress:
+                if edge.Destination == m.Destination:
+                    curr = edge.Destination
+                    break
+
+            if curr != m.Destination:
+                visited.append(curr)
+                stack.append(curr)
+                # If stuck go back to the node you just came from and try
+                # another way
+                while stuck(curr,visited):
+                    route.pop(len(route)-1)
+                    stack.pop(len(stack)-1)
+                    curr = stack[len(stack)-1]
+                e_len = len(vertices[curr].Egress)
                 ran_num = random.randint(1,e_len)
-            curr = vertices[curr].Egress[ran_num-1].Destination
+                # If the randomly picked outgoing edge is already visited, pick
+                # another random number
+                while (vertices[curr].Egress[ran_num-1].Destination in visited):
+                    ran_num = random.randint(1,e_len)
+                curr = vertices[curr].Egress[ran_num-1].Destination
 
-        route.append(curr)
-    return route
+            route.append(curr)
+        sol.append(route)
+    return sol
 
-print(initSolution())
+for r in initSolution():
+    print(r)
+
+for v in vertices:
+    for e in vertices[v].Egress:
+        print(e)

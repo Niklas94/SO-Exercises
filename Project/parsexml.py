@@ -31,7 +31,7 @@ class Edge:
         self.Queue = 0
 
     def __str__(self):
-        return ("    Id: " + self.Id + ", Bandwidth: " + self.Bandwidth + ", PropDelay: " + self.PropDelay + ", Source: " + self.Source + ", Destination: " + self.Destination)
+        return ("    Id: " + self.Id + ", Bandwidth: " + self.Bandwidth + ", PropDelay: " + self.PropDelay + ", Source: " + self.Source + ", Destination: " + self.Destination + ", Queue: " + str(self.Queue))
 
     def __eq__(self, other):
         if isinstance(other, Edge):
@@ -62,14 +62,14 @@ class Msg2Route:
             ret += "\n" + e.__str__()
         return ret
 
-def parse():
+def parse(conf='ConfigTest.xml', app='Appstest.xml'):
     vertices = {}
     edges = []
     msgs = []
 
-    conf_tree = ET.parse('ConfigTest.xml')
+    conf_tree = ET.parse(conf)
     conf_root = conf_tree.getroot()
-    app_tree = ET.parse('AppsTest.xml')
+    app_tree = ET.parse(app)
     app_root = app_tree.getroot()
 
     for child in conf_root:
