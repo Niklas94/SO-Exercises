@@ -67,9 +67,9 @@ def parse():
     edges = []
     msgs = []
 
-    conf_tree = ET.parse('Config.xml')
+    conf_tree = ET.parse('ConfigTest.xml')
     conf_root = conf_tree.getroot()
-    app_tree = ET.parse('Apps.xml')
+    app_tree = ET.parse('AppsTest.xml')
     app_root = app_tree.getroot()
 
     for child in conf_root:

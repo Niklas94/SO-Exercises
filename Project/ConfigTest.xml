@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Architecture>
+	<Vertex Name="1"></Vertex>
+	<Vertex Name="2"></Vertex>
+	<Vertex Name="3"></Vertex>
+  	<Vertex Name="4"></Vertex>
+	<Vertex Name="5"></Vertex>
+	<Vertex Name="6"></Vertex>
+	<Vertex Name="7"></Vertex>
+	<Vertex Name="8"></Vertex>
+	<Vertex Name="9"></Vertex>
+	<Vertex Name="10"></Vertex>
+
+	<Edge Id="1" BW="1000" PropDelay="10" Source="1" Destination="2"></Edge>
+	<Edge Id="2" BW="1000" PropDelay="10" Source="1" Destination="4"></Edge>
+	<Edge Id="3" BW="1000" PropDelay="10" Source="2" Destination="4"></Edge>
+	<Edge Id="4" BW="1000" PropDelay="10" Source="2" Destination="5"></Edge>
+	<Edge Id="5" BW="1000" PropDelay="10" Source="2" Destination="7"></Edge>
+	<Edge Id="6" BW="1000" PropDelay="10" Source="2" Destination="8"></Edge>
+	<Edge Id="7" BW="1000" PropDelay="10" Source="2" Destination="9"></Edge>
+	<Edge Id="8" BW="1000" PropDelay="10" Source="4" Destination="1"></Edge>
+	<Edge Id="9" BW="1000" PropDelay="10" Source="4" Destination="5"></Edge>
+	<Edge Id="10" BW="1000" PropDelay="10" Source="5" Destination="3"></Edge>
+	<Edge Id="11" BW="1000" PropDelay="10" Source="5" Destination="10"></Edge>
+	<Edge Id="12" BW="1000" PropDelay="10" Source="3" Destination="6"></Edge>
+	<Edge Id="13" BW="1000" PropDelay="10" Source="10" Destination="4"></Edge>
+
+
+</Architecture>

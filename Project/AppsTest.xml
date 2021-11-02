@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Application>
+	<Message Name="F1" Source="1" Destination="6" Size="300" Period="1000" Deadline="1000">
+	</Message>
+</Application>
