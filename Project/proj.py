@@ -23,19 +23,12 @@ def initSolution():
         while (curr != m.Destination):
             # check if the edges going out of current vertex are already
             # assigned to queues. If not, pick random queues from 1 to the total
-            # number of outgoing edges to assign each edge. Do not allow
-            # duplicate queue numbers by checking if randomly generated value is
-            # already used earlier.
+            # number of outgoing edges to assign each edge.            
             unset = vertices[curr].Egress[0].Queue == 0
             if unset:
                 e_len = len(vertices[curr].Egress)
-                assigned = []
                 for i in range (0, e_len):
-                    while(True):
-                        rand = random.randint(1,e_len)
-                        if rand not in assigned:
-                            break
-                    assigned.append(rand)
+                    rand = random.randint(1,e_len)
                     vertices[curr].Egress[i].Queue = rand
 
             # Check if the search destination is the destination of one of the
