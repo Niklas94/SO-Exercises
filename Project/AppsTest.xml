@@ -2,4 +2,6 @@
 <Application>
 	<Message Name="F1" Source="1" Destination="6" Size="300" Period="1000" Deadline="1000">
 	</Message>
+	<Message Name="F2" Source="2" Destination="1" Size="300" Period="1000" Deadline="1000">
+	</Message>
 </Application>
