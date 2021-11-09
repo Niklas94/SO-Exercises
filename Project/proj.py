@@ -1,6 +1,7 @@
 from parsexml import *
 import copy
 
+CycleLength = 12
 # vertices, edges, msgs = parse("Config.xml", "Apps.xml")
 vertices, edges, msgs = parse()
 
@@ -56,6 +57,7 @@ def search(cu, vis, sta, msg2r):
             curr = vertices[curr].Egress[ran_num-1].Destination
 
         msg2r.Route.append(e)
+        msg2r.E2E += (e.Queue * CycleLength) + int(e.PropDelay)
     return msg2r
 
 

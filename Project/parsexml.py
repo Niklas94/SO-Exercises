@@ -53,9 +53,10 @@ class Msg2Route:
     def __init__(self, Msg):
         self.Msg = Msg
         self.Route = []
+        self.E2E = 0
 
     def __str__(self):
-        ret = self.Msg.__str__()
+        ret = self.Msg.__str__() + ", E2E: " + str(self.E2E)
         for e in self.Route:
             ret += "\n" + e.__str__()
         return ret
