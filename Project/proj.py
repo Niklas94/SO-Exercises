@@ -1,7 +1,8 @@
 from parsexml import *
 import copy
 
-vertices, edges, msgs = parse("Config.xml", "Apps.xml")
+# vertices, edges, msgs = parse("Config.xml", "Apps.xml")
+vertices, edges, msgs = parse()
 
 def stuck(curr,visited):
     ret = True
@@ -17,8 +18,6 @@ def initSolution():
     for m in msgs:
         curr = m.Source
         visited = []
-        route = []
-        # route = [vertices[curr].Name]
         stack = []
         msg2r = Msg2Route(m)
 
@@ -26,12 +25,13 @@ def initSolution():
             # check if the edges going out of current vertex are already
             # assigned to queues. If not, pick random queues from 1 to the total
             # number of outgoing edges to assign each edge.            
-            unset = vertices[curr].Egress[0].Queue == 0
-            if unset:
-                e_len = len(vertices[curr].Egress)
-                for i in range (0, e_len):
-                    rand = random.randint(1,e_len)
-                    vertices[curr].Egress[i].Queue = rand
+            if (len(vertices[curr].Egress) > 0):
+                unset = vertices[curr].Egress[0].Queue == 0
+                if unset:
+                    e_len = len(vertices[curr].Egress)
+                    for i in range (0, e_len):
+                        rand = random.randint(1,e_len)
+                        vertices[curr].Egress[i].Queue = rand
 
             # Check if the search destination is the destination of one of the
             # outgoing edges
@@ -48,7 +48,7 @@ def initSolution():
                 # If stuck go back to the node you just came from and try
                 # another way
                 while stuck(curr,visited):
-                    msg2r.Route.pop(len(route)-1)
+                    msg2r.Route.pop(len(msg2r.Route)-1)
                     stack.pop(len(stack)-1)
                     curr = stack[len(stack)-1]
 
