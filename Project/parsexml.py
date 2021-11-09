@@ -1,7 +1,6 @@
 import xml.etree.ElementTree as ET
 from operator import attrgetter
 import random
-from simulatedAnnealing import *
 from xml.dom import minidom
 
 

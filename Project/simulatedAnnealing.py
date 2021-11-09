@@ -1,6 +1,7 @@
 import random
 import math
 import copy
+from vsearch import *
 
 # Algorithm 5 - Exercises week 37
 def simulatedAnnealing(initialSolution):
@@ -35,57 +36,43 @@ def simulatedAnnealing(initialSolution):
     return curr_best
 
 # Find 'nearby' solution
-def neighbourhood (chips):
-    c = copy.deepcopy(chips)
+def neighbourhood (msgs,vertices):
+    prob = random.uniform(0,1)
+    # pick a random msg2route object
+    randomMsg = random.choice(msgs)
+    # pick a random index between 0 and the length of the route array of that
+    # msg2route object -2 (as randint is not inclusive second argument and it
+    # makes no sense to find a new route from the second to last node as it will
+    # pick the same route again, as it can see the destination from that node).
+    randomEdgeC = random.randint(0,len(randomMsg.Route)-2)
+    randomEdge = randomMsg.Route[randomEdgeC]
+    print("Picked message " + str(randomMsg.Msg.Name))
+    print("Picked index " + str(randomEdgeC))
 
-    for i in range (0,1):
-        # find first random core
-        tList = []
-        while (len(tList) == 0):
-            randomChip = random.choice(c)
-            choice = list(randomChip.Cores.keys())
-            CoreId = random.choice(choice)
-            if (len(randomChip.Cores[CoreId].TasksList) > 0):
-                tList = randomChip.Cores[CoreId].TasksList
+    if (prob > 0.5):
+        # slices the route array such that we only include up to edge before the
+        # randomly chosen edge 
+        randomMsg.Route = randomMsg.Route[:randomEdgeC]
 
-        task = random.choice(tList)
+        print("Performing search from " + str(randomEdge.Source) + " to " +
+              str(randomMsg.Msg.Destination))
 
-        # find second random core
-        rChip = random.choice(c)
-        rChoice = list(rChip.Cores.keys())
-        rCoreId = random.choice(rChoice)
-        rtList = []
+        # rebuild visited and stack
+        visited = []
+        stack = []
+        for r in randomMsg.Route:
+            visited.append(r.Destination)
+            stack.append(r.Destination)
 
-        # half the time move random task, half the time swap 2 random tasks
-        prob = random.uniform(0,1)
-        if (0.5 > prob ):
-            # remove task from old core
-            randomChip.Cores[CoreId].removeTask(task)
-            # add task to new core
-            rChip.Cores[rCoreId].addTask(task)
+        search(randomEdge.Source,visited,stack,randomMsg,vertices)
+    else:
+        e_len = len(vertices[randomEdge.Source].Egress)
+        rand = random.randint(1,e_len+1)
+        print("Changing queue of edge " + str(randomEdge.Id) + " from " +
+              str(randomEdge.Queue) + " to " + str(rand))
+        ind = vertices[randomEdge.Source].Egress.index(randomEdge)
+        vertices[randomEdge.Source].Egress[ind].Queue = rand
 
-        else:
-            # have to find a non-empty second core to be able to swap
-            while len(rtList) == 0:
-                rChip = random.choice(c)
-                rChoice = list(rChip.Cores.keys())
-                rCoreId = random.choice(rChoice)
-                if (len(rChip.Cores[rCoreId].TasksList) > 0):
-                    rtList = rChip.Cores[rCoreId].TasksList
-
-            rTask = random.choice(rtList)
-
-            tmp = copy.deepcopy(rTask)
-            rTask = task
-            task = tmp
-
-    # Sort the neighbour at the end
-    for chip in c:
-        for coreId in chip.Cores:
-            curr_core = chip.Cores[coreId]
-            curr_core.sortList()
-
-    return c
 
 
 # Probability function which will allow inferior solutions. The lower T, the
