@@ -50,14 +50,12 @@ class Message:
         return ("Name: " + self.Name + ", Source: " + self.Source + ", Destination: " + self.Destination + ", Size: " + self.Size + ", Period: " + self.Period + ", Deadline: " + self.Deadline)
 
 class Msg2Route:
-    def __init__(self, Name, Source, Destination):
-        self.Name = Name
-        self.Source = Source
-        self.Destination = Destination
+    def __init__(self, Msg):
+        self.Msg = Msg
         self.Route = []
 
     def __str__(self):
-        ret = "Name: " + self.Name + "Source: " + self.Source + "Destination: " + self.Destination
+        ret = self.Msg.__str__()
         for e in self.Route:
             ret += "\n" + e.__str__()
         return ret

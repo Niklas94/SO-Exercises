@@ -17,8 +17,10 @@ def initSolution():
     for m in msgs:
         curr = m.Source
         visited = []
-        route = [vertices[curr].Name]
+        route = []
+        # route = [vertices[curr].Name]
         stack = []
+        msg2r = Msg2Route(m)
 
         while (curr != m.Destination):
             # check if the edges going out of current vertex are already
@@ -36,6 +38,7 @@ def initSolution():
             for edge in vertices[curr].Egress:
                 if edge.Destination == m.Destination:
                     curr = edge.Destination
+                    e = edge
                     break
 
             # If we're not at the goal, get next vertex
@@ -45,7 +48,7 @@ def initSolution():
                 # If stuck go back to the node you just came from and try
                 # another way
                 while stuck(curr,visited):
-                    route.pop(len(route)-1)
+                    msg2r.Route.pop(len(route)-1)
                     stack.pop(len(stack)-1)
                     curr = stack[len(stack)-1]
 
@@ -55,11 +58,13 @@ def initSolution():
                 # another random number
                 while (vertices[curr].Egress[ran_num-1].Destination in visited):
                     ran_num = random.randint(1,e_len)
+                e = vertices[curr].Egress[ran_num-1]
                 curr = vertices[curr].Egress[ran_num-1].Destination
 
-            route.append(curr)
-        sol.append(route)
+            msg2r.Route.append(e)
+        sol.append(msg2r)
     return sol
 
 for r in initSolution():
     print(r)
+    print()
