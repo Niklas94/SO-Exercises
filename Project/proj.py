@@ -20,9 +20,9 @@ def initSolution():
     return sol
 
 s = initSolution()
-for r in s:
-    print(r)
-    print()
+#for r in s:
+#    print(r)
+#    print()
 
 neighbourhood(s,vertices)
 
@@ -31,3 +31,7 @@ print("-------------------")
 for r in s:
     print(r)
     print()
+
+linkConstraint = linkCapacityConstraint(s)
+
+print("linkConstraintUpheld: " + str(linkConstraint))

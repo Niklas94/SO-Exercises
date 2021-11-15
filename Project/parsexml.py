@@ -50,7 +50,7 @@ class Message:
 
 class Msg2Route:
     def __init__(self, Msg):
-        self.Msg = Msg
+        self.Msg : Message = Msg
         self.Route = []
         self.E2E = 0
 
@@ -60,7 +60,7 @@ class Msg2Route:
             ret += "\n" + e.__str__()
         return ret
 
-def parse(conf='ConfigTest.xml', app='Appstest.xml'):
+def parse(conf='./ConfigTest.xml', app='./Appstest.xml'):
     vertices = {}
     edges = []
     msgs = []

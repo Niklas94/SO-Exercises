@@ -152,3 +152,50 @@ def isSolution(solution, lax=[]):
     lax.append(tl)
     return feasible
 
+# Check that for every cycle, no link is transmitting more data than their bandwidth
+def linkCapacityConstraint(solution: list[Msg2Route]):
+    
+    # Equation for this constraint
+
+    # Hyper cycle       C
+    # Cycle             c
+    # Link              ε i,j
+    # Set of links      Ε
+    # Consumed bandwith of each link ε i,j in each cycle c noted as B c,j
+    # arrival pattern function A(c)and the latencyα
+
+    # Other related notes
+
+    # LCM (least common multiple) over all messages/flows
+
+    # Source for calculating LCM: https://www.includehelp.com/python/find-the-lcm-of-the-array-elements.aspx
+    lcm = int(solution[0].Msg.Period)
+
+    for i in range(1, len(solution)):
+        lcm = math.ceil(lcm*int(solution[i].Msg.Period)//math.gcd(lcm, int(solution[i].Msg.Period)))    # Have to round up hypercycle
+
+    # function to calculate LCM
+    #lcm = a[0]
+    #for i in range(1,len(a)):
+    #    lcm = lcm*a[i]//math.gcd(lcm, a[i])
+ 
+    print('LCM/Hypercycle length:')
+    print(lcm)
+
+    print('---------- Checking link capacity constraint ----------')
+
+    # Iterate over Links
+
+
+
+    for msg2Route in solution:
+        print(msg2Route)
+        print()
+
+        for link in msg2Route.Route:
+            print(link)
+            
+
+
+
+    return True
