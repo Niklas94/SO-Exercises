@@ -44,6 +44,7 @@ class Message:
         self.Size = Size
         self.Period = Period
         self.Deadline = Deadline
+        self.E2E = None
 
     def __str__(self):
         return ("Name: " + self.Name + ", Source: " + self.Source + ", Destination: " + self.Destination + ", Size: " + self.Size + ", Period: " + self.Period + ", Deadline: " + self.Deadline)
@@ -59,6 +60,7 @@ class Msg2Route:
         for e in self.Route:
             ret += "\n" + e.__str__()
         return ret
+
 
 def parse(conf='ConfigTest.xml', app='Appstest.xml'):
     vertices = {}

@@ -126,29 +126,66 @@ def Cost(chips):
     feasible = isSolution(chips)
     if (not feasible):
         cost += nonFeasibleWeight
-
     return cost
+
+
+def Cost_new(msgs):    
+    # # Weights
+    # nonFeasibleWeight = 100000
+    # taskCountWeight = 50
+    # orderWeight = 250
+    cost = 0
+
+    # # for chip in chips:
+    #     for coreID in chip.Cores:
+    #         taskCount = 0
+    #         curr_core = chip.Cores[coreID]
+
+    #         prevTaskDeadline = 0
+    #         prevTaskWCET = 0
+    #         numUnordered = 0
+
+    #         for t in curr_core.TasksList:
+    #             # Penalize if tasks are unordered according to deadline in core
+    #             if int(t.Deadline) < prevTaskDeadline and prevTaskDeadline != 0:
+    #                 cost += 1 + numUnordered * orderWeight
+    #                 numUnordered += 1
+
+    #             # If they have the same deadline, penalize for unordered
+    #             # according to WCET
+    #             elif int(t.Deadline) == prevTaskDeadline:
+    #                 if int(t.WCET) > prevTaskWCET:
+    #                     cost += 1 + numUnordered * orderWeight
+    #                     numUnordered += 1
+
+    #             prevTaskDeadline = int(t.Deadline)
+    #             prevTaskWCET = int(t.WCET)
+
+    #             taskCount += 1
+    #             # The more tasks on a core, the bigger the penalty
+    #             cost += taskCount * taskCountWeight
+    #             # Prioritize having slow tasks on fast cores
+    #             cost += float(curr_core.WCETFactor) * float(t.WCET)
+
+    # # If neighbour is not a solution, add massive penalty
+    feasible = isSolution(msgs)
+    if (not feasible):
+        cost += nonFeasibleWeight
+    return cost
+
+
+
+
 
 # Checks if solution is scheduble 
 def isSolution(solution, lax=[]):
     tl = 0
     feasible = True
-    for chip in solution:
-        for coreID in chip.Cores:
-            i = 0.0
-            curr_core = chip.Cores[coreID]
-
-            for t in curr_core.TasksList:
-                # How long the task takes in this specific core
-                responseTime = i + float(curr_core.WCETFactor) * float(t.WCET) 
-                i = responseTime
-                tl += i
-
-                if responseTime > float(t.Deadline):
-                    feasible = False
-
-    # as lax is called by reference, we can use this total laxity score outside
-    # the function
-    lax.append(tl)
+    
+    for m in solution:
+        print ('ddl: ', m.Msg.Deadline, ' vs E2E: ', m.E2E )
+        if ( int (m.E2E) > int(m.Msg.Deadline) ):
+            feasible = False
+    
     return feasible
 

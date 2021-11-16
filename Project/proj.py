@@ -11,6 +11,7 @@ def initSolution():
     sol = []
     for m in msgs:
         curr = m.Source
+
         msg2r = Msg2Route(m)
 
         # Do a search from current to m.destination. Route will be appended to
@@ -20,14 +21,15 @@ def initSolution():
     return sol
 
 s = initSolution()
-for r in s:
-    print(r)
-    print()
+# print(s)
 
-neighbourhood(s,vertices)
+Cost_new(s)
 
-print("After neighbourhood")
-print("-------------------")
-for r in s:
-    print(r)
-    print()
+# neighbourhood(s,vertices)
+#
+# Cost_new(s)
+# print("After neighbourhood")
+# print("-------------------")
+# for r in s:
+    # print(r)
+    # print()
