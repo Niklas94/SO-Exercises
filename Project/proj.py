@@ -7,8 +7,9 @@ import copy
 vertices, edges, msgs = parse()
 
 # Generates an array of arrays. Each inner array is a route for a message.
-def initSolution() -> list[Route]:
+def initSolution():
     sol : list[Route] = []
+    
     for m in msgs:
         curr : str = m.Source
         route : Route = Route(m)
@@ -19,7 +20,7 @@ def initSolution() -> list[Route]:
         sol.append(route)
     return sol
 
-s : list[Route] = initSolution()
+s = initSolution()
 for r in s:
     print(r)
     print()

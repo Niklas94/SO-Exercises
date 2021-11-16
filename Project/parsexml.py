@@ -30,7 +30,9 @@ class Edge:
         self.Source : str = Source
         self.Destination : str = Destination
         self.Capacity : int = self.Bandwidth * CycleLength
-        self.InducedDelay : int = math.floor(self.PropDelay / CycleLength)
+        self.InducedDelay : int = math.ceil(self.PropDelay / CycleLength)
+    
+    
 
     def __str__(self):
         return ("Id: " + self.Id + ", Bandwidth: " + str(self.Bandwidth) + ", PropDelay: " + str(self.PropDelay) + ", Source: " + self.Source + ", Destination: " + self.Destination + ", Capacity: " + str(self.Capacity) + ", Induced Delay: " + str(self.InducedDelay))
@@ -66,11 +68,30 @@ class Route:
         self.Msg : Message = Msg
         self.LinkAssignments : list[LinkAssignment] = []
         self.E2E : int = 0
+    
+    def CalculateE2E(self):
+        E2E = 0
+        for la in self.LinkAssignments:
+            E2E += la.Link.InducedDelay + la.QueueNumber
+        
+        self.E2E = E2E
+        
+        
+    def MeetsDeadline(self):
+        if (self.E2E > self.Msg.AcceptableDeadline):
+            return False
+        else :
+            return True        
 
     def __str__(self) -> str:
-        ret = self.Msg.__str__() + ", E2E: " + str(self.E2E)
+        ret = "------------------Route for Message------------------------\n"
+        self.CalculateE2E()
+        ret += self.Msg.__str__() + ", E2E: " + str(self.E2E) + "\n\n"
+        ret +="------------------The path---------------------\n"
         for e in self.LinkAssignments:
             ret += "\n" + e.__str__()
+        
+        ret += "\n\nMeets the acceptable deadline : " + str(self.MeetsDeadline())
         return ret
 
 
@@ -80,12 +101,10 @@ class LinkAssignment:
         self.QueueNumber : int = QueueNumber
 
     def __str__(self):
-        return ("Link: " + self.Link.__str__() + "QueueNumber: " + str(self.QueueNumber))
+        return ("Source: " + str(self.Link.Source) + ", Destination: " + str(self.Link.Destination) + ", QueueNumber: " + str(self.QueueNumber))
 
 
-def parse(conf='ConfigTest.xml', app='Appstest.xml') -> tuple[dict[str,Vertex],
-                                                              list[Edge],
-                                                              list[Message]]:
+def parse(conf='./Config.xml', app='./Apps.xml') :
     vertices : dict[str, Vertex] = {}
     edges : list[Edge] = []
     msgs : list[Message] = []
