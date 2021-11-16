@@ -19,7 +19,6 @@ class Vertex:
             ret += "\n" + e.__str__() + ", "
         return ret + "\n\n"
 
-
 class Edge:
     def __init__(self, Id, Bandwidth, PropDelay, Source, Destination):
         self.Id = Id
@@ -27,10 +26,9 @@ class Edge:
         self.PropDelay = PropDelay
         self.Source = Source
         self.Destination = Destination
-        self.Queue = 0
 
     def __str__(self):
-        return ("Id: " + self.Id + ", Bandwidth: " + self.Bandwidth + ", PropDelay: " + self.PropDelay + ", Source: " + self.Source + ", Destination: " + self.Destination + ", Queue: " + str(self.Queue))
+        return ("Id: " + self.Id + ", Bandwidth: " + self.Bandwidth + ", PropDelay: " + self.PropDelay + ", Source: " + self.Source + ", Destination: " + self.Destination)
 
     def __eq__(self, other):
         if isinstance(other, Edge):
@@ -74,13 +72,23 @@ def parse(conf='ConfigTest.xml', app='Appstest.xml'):
         if child.tag == "Vertex":
             vertices[child.attrib['Name']] = Vertex(child.attrib['Name'])
         if child.tag == "Edge":
-            e = Edge(child.attrib['Id'], child.attrib['BW'],
+            # Add original edge
+            e1 = Edge(child.attrib['Id'], child.attrib['BW'],
                                 child.attrib['PropDelay'], child.attrib['Source'],
                                 child.attrib['Destination'])
-            edges.append(e)
+            edges.append(e1)
 
-            vertices.get(child.attrib['Source']).Egress.append(e)
-            vertices.get(child.attrib['Destination']).Ingress.append(e)
+            vertices.get(child.attrib['Source']).Egress.append(e1)
+            vertices.get(child.attrib['Destination']).Ingress.append(e1)
+
+            # Add inverse edge as full duplex
+            e2 = Edge(child.attrib['Id'], child.attrib['BW'],
+                      child.attrib['PropDelay'], child.attrib['Destination'],
+                      child.attrib['Source'])
+            edges.append(e2)
+
+            vertices.get(child.attrib['Destination']).Egress.append(e2)
+            vertices.get(child.attrib['Source']).Ingress.append(e2)
 
     for child in app_root:
         msgs.append(Message(child.attrib['Name'], child.attrib['Source'],
