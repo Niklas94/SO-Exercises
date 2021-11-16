@@ -3,6 +3,7 @@ from operator import attrgetter
 import random
 from xml.dom import minidom
 
+cyclelength = 12
 
 class Vertex:
     def __init__(self, Name):
@@ -27,7 +28,8 @@ class Edge:
         self.PropDelay = PropDelay
         self.Source = Source
         self.Destination = Destination
-        self.Queue = 0
+        self.Capacity = Bandwidth * cyclelength
+        self.InducedDelay = PropDelay / cyclelength
 
     def __str__(self):
         return ("Id: " + self.Id + ", Bandwidth: " + self.Bandwidth + ", PropDelay: " + self.PropDelay + ", Source: " + self.Source + ", Destination: " + self.Destination + ", Queue: " + str(self.Queue))
@@ -44,22 +46,42 @@ class Message:
         self.Size = Size
         self.Period = Period
         self.Deadline = Deadline
+        self.AcceptableDeadline = Deadline / cyclelength
+    
+    def arrivalPattern(self, cycle):
+        
+        if (not ((cycle * cyclelength) % self.Period)):
+            return self.Size
+        else:
+            return 0
 
     def __str__(self):
         return ("Name: " + self.Name + ", Source: " + self.Source + ", Destination: " + self.Destination + ", Size: " + self.Size + ", Period: " + self.Period + ", Deadline: " + self.Deadline)
 
-class Msg2Route:
+class Route:
     def __init__(self, Msg):
         self.Msg = Msg
-        self.Route = []
+        self.LinkAssignments = []
         self.E2E = 0
 
     def __str__(self):
         ret = self.Msg.__str__() + ", E2E: " + str(self.E2E)
-        for e in self.Route:
+        for e in self.LinkAssignments:
             ret += "\n" + e.__str__()
         return ret
 
+
+class LinkAssignment:
+    def __init__(self, Link, Queue_Number):
+        self.Link = Link
+        self.QueueNumber = Queue_Number
+        
+    def __str__(self):
+        return ("Link: " + self.Link.__str__() + "QueueNumber: " + self.QueueNumber)
+        
+        
+        
+        
 def parse(conf='ConfigTest.xml', app='Appstest.xml'):
     vertices = {}
     edges = []
