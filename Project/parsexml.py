@@ -32,8 +32,8 @@ class Edge:
         self.Capacity : int = self.Bandwidth * CycleLength
         self.InducedDelay : int = math.floor(self.PropDelay / CycleLength)
 
-    def __str__(self) -> str:
-        return ("Id: " + self.Id + ", Bandwidth: " + str(self.Bandwidth) + ", PropDelay: " + str(self.PropDelay) + ", Source: " + self.Source + ", Destination: " + self.Destination)
+    def __str__(self):
+        return ("Id: " + self.Id + ", Bandwidth: " + str(self.Bandwidth) + ", PropDelay: " + str(self.PropDelay) + ", Source: " + self.Source + ", Destination: " + self.Destination + ", Capacity: " + str(self.Capacity) + ", Induced Delay: " + str(self.InducedDelay))
 
     def __eq__(self, other) -> bool:
         if isinstance(other, Edge):
@@ -58,8 +58,8 @@ class Message:
         else:
             return 0
 
-    def __str__(self) -> str:
-        return ("Name: " + self.Name + ", Source: " + self.Source + ", Destination: " + self.Destination + ", Size: " + str(self.Size) + ", Period: " + str(self.Period) + ", Deadline: " + str(self.Deadline))
+    def __str__(self):
+        return ("Name: " + self.Name + ", Source: " + self.Source + ", Destination: " + self.Destination + ", Size: " + str(self.Size) + ", Period: " + str(self.Period) + ", Deadline: " + str(self.Deadline) + ", Acceptable Deadline: " + str(self.AcceptableDeadline))
 
 class Route:
     def __init__(self, Msg: Message):
