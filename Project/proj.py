@@ -7,27 +7,27 @@ import copy
 vertices, edges, msgs = parse()
 
 # Generates an array of arrays. Each inner array is a route for a message.
-def initSolution():
-    sol = []
+def initSolution() -> list[Route]:
+    sol : list[Route] = []
     for m in msgs:
-        curr = m.Source
-        msg2r = Msg2Route(m)
+        curr : str = m.Source
+        route : Route = Route(m)
 
         # Do a search from current to m.destination. Route will be appended to
-        # the msg2r object by reference.
-        search(curr,[],[],msg2r,vertices)
-        sol.append(msg2r)
+        # the route object by reference.
+        search(curr,[],[],route,vertices)
+        sol.append(route)
     return sol
 
-s = initSolution()
+s : list[Route] = initSolution()
 for r in s:
     print(r)
     print()
 
-neighbourhood(s,vertices)
+# neighbourhood(s,vertices)
 
-print("After neighbourhood")
-print("-------------------")
-for r in s:
-    print(r)
-    print()
+# print("After neighbourhood")
+# print("-------------------")
+# for r in s:
+#     print(r)
+#     print()
