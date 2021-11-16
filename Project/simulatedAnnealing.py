@@ -11,6 +11,7 @@ def simulatedAnnealing(initialSolution):
     curr_best = copy.deepcopy(initialSolution)
     tried = 0
     print_counter = 0
+    hyper_cycle_length = calculateHyperCycleLength(InitialSolution)
 
     while (T > 1):
         if print_counter % 1000 == 0:
@@ -152,3 +153,50 @@ def isSolution(solution, lax=[]):
     lax.append(tl)
     return feasible
 
+def calculateHyperCycleLength(solution: list[Route]):
+    
+    # LCM (least common multiple) over all messages/flows
+
+    # Source for calculating LCM: https://www.includehelp.com/python/find-the-lcm-of-the-array-elements.aspx
+    lcm = int(solution[0].Msg.Period)
+
+    for i in range(1, len(solution)):
+        lcm = math.ceil(lcm*int(solution[i].Msg.Period)//math.gcd(lcm, int(solution[i].Msg.Period)))    # Have to round up hypercycle
+    
+    return lcm
+
+# Check that for every cycle, no link is transmitting more data than their bandwidth
+def linkCapacityConstraint(solution: list[Route], C : int, E : list[Egde]):
+    
+    # Equation for this constraint
+
+    # Hyper cycle       C
+    # Cycle             c
+    # Link              ε i,j
+    # Set of links      Ε
+    # Consumed bandwith of each link ε i,j in each cycle c noted as B c,j
+    # arrival pattern function A(c)and the latencyα
+
+    # Other related notes
+    
+    
+    print('---------- Checking link capacity constraint ----------')
+    penalty = 0
+    for cycle in range(0,C):
+        for link in E:
+            B_link_c = 0
+            for route in solution:
+                alpha = 0
+                for la in route.LinkAssignments:
+                    if la.Link == link:
+                        break
+                    alpha += la.Link.InducedDelay + la.QueueNumber
+                
+                B_link_c += route.Msg.ArrivalPattern(cycle - alpha)
+                
+            
+            if (B_link_c > link.Capacity):
+                penalty += (B_link_c - link.Capacity)*500
+                print("Link " + str(link) + " goes over the bandwith limit in cycle " + str(cycle))
+    
+    return penalty
