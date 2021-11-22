@@ -1,5 +1,9 @@
 from parsexml import *
+import random
 
+# Returns false if not stuck (if has somewhere to go that has not already been
+# visited) at current position. Returns true if nowhere to go that hasn't
+# already been visited.
 def stuck(curr, visited, vertices):
     ret = True
     for e in vertices[curr].Egress:
@@ -7,25 +11,17 @@ def stuck(curr, visited, vertices):
             ret = False
     return ret
 
+# Search for a route between cur and route.Msg.Destination, append link
+# assignments taken to the route and return it.
 def search(cur, vis, sta, route, vertices):
     curr : str = cur
     visited : list[str] = vis
     stack : list[str] = sta
     destination : str = route.Msg.Destination
     while (curr != destination):
-        # check if the edges going out of current vertex are already
-        # assigned to queues. If not, pick random queues from 1 to the total
-        # number of outgoing edges to assign each edge.            
-        # if (len(vertices[curr].Egress) > 0):
-        #     unset = vertices[curr].Egress[0].Queue == 0
-        #     if unset:
-        #         e_len = len(vertices[curr].Egress)
-        #         for i in range (0, e_len):
-        #             rand = random.randint(1,e_len+1)
-        #             vertices[curr].Egress[i].Queue = rand
-
         # Check if the search destination is the destination of one of the
-        # outgoing edges
+        # outgoing edges, if so, create link assignment from the edge leading
+        # there, add to the route, and return the route.
         for edge in vertices[curr].Egress:
             if edge.Destination == destination:
                 curr = edge.Destination
@@ -52,7 +48,7 @@ def search(cur, vis, sta, route, vertices):
             e : Edge = vertices[curr].Egress[ran_num-1]
             curr = vertices[curr].Egress[ran_num-1].Destination
 
-        route.LinkAssignments.append(LinkAssignment(e, random.randint(1, 3)))
-        # Always multiplies by queue even if it might be send earlier due to T %
-        # q == 0
+        randomQueue = random.randint(1,3)
+        route.LinkAssignments.append(LinkAssignment(e, randomQueue))
+        route.Id += str(e.Id) + str(randomQueue)
     return route

@@ -1,8 +1,5 @@
 import xml.etree.ElementTree as ET
-from operator import attrgetter
-import random
 import math
-from xml.dom import minidom
 
 CycleLength = 12
 
@@ -21,6 +18,7 @@ class Vertex:
             ret += "\n" + e.__str__() + ", "
         return ret + "\n\n"
 
+
 class Edge:
     def __init__(self, Id : str, Bandwidth : str, PropDelay : str, Source : str,
                  Destination : str):
@@ -31,8 +29,6 @@ class Edge:
         self.Destination : str = Destination
         self.Capacity : int = self.Bandwidth * CycleLength
         self.InducedDelay : int = math.ceil(self.PropDelay / CycleLength)
-    
-    
 
     def __str__(self):
         return ("Id: " + self.Id + ", Bandwidth: " + str(self.Bandwidth) + ", PropDelay: " + str(self.PropDelay) + ", Source: " + self.Source + ", Destination: " + self.Destination + ", Capacity: " + str(self.Capacity) + ", Induced Delay: " + str(self.InducedDelay))
@@ -42,6 +38,7 @@ class Edge:
             return self.Id == other.Id
         else:
             return False
+
 
 class Message:
     def __init__(self, Name : str, Source : str, Destination : str, Size : str,
@@ -55,7 +52,10 @@ class Message:
         self.AcceptableDeadline : int = math.floor(int(Deadline) / CycleLength)
 
     def ArrivalPattern(self, cycle : int) -> int:
-        if (not ((cycle * CycleLength) % self.Period)):
+        # print("Cycle " + str(cycle) + " * cyclelength " + str(CycleLength) + " % period " + str(self.Period))
+        # print((cycle * CycleLength) % self.Period)
+        if ((cycle * CycleLength) % self.Period <= 12):
+            # print("Yes")
             return self.Size
         else:
             return 0
@@ -63,34 +63,35 @@ class Message:
     def __str__(self):
         return ("Name: " + self.Name + ", Source: " + self.Source + ", Destination: " + self.Destination + ", Size: " + str(self.Size) + ", Period: " + str(self.Period) + ", Deadline: " + str(self.Deadline) + ", Acceptable Deadline: " + str(self.AcceptableDeadline))
 
+
 class Route:
     def __init__(self, Msg: Message):
         self.Msg : Message = Msg
         self.LinkAssignments : list[LinkAssignment] = []
         self.E2E : int = 0
-    
+        self.Id : str = ""
+
     def CalculateE2E(self):
         E2E = 0
         for la in self.LinkAssignments:
             E2E += la.Link.InducedDelay + la.QueueNumber
-        
+
         self.E2E = E2E
-        
-        
+
     def MeetsDeadline(self):
         if (self.E2E > self.Msg.AcceptableDeadline):
             return False
         else :
-            return True        
+            return True
 
     def __str__(self) -> str:
         ret = "------------------Route for Message------------------------\n"
         self.CalculateE2E()
-        ret += self.Msg.__str__() + ", E2E: " + str(self.E2E) + "\n\n"
+        ret += self.Msg.__str__() + ", E2E: " + str(self.E2E) + ", Id: " + str(self.Id) + "\n\n"
         ret +="------------------The path---------------------\n"
         for e in self.LinkAssignments:
             ret += "\n" + e.__str__()
-        
+
         ret += "\n\nMeets the acceptable deadline : " + str(self.MeetsDeadline())
         return ret
 
@@ -124,8 +125,9 @@ def parse(conf='./Config.xml', app='./Apps.xml') :
                                 child.attrib['Destination'])
             edges.append(e1)
 
-            vertices.get(child.attrib['Source']).Egress.append(e1)
-            vertices.get(child.attrib['Destination']).Ingress.append(e1)
+            eg = vertices.get(child.attrib['Source'])
+            if eg != None:
+                eg.Egress.append(e1)
 
             # Add inverse edge as full duplex
             e2 = Edge(child.attrib['Id'], child.attrib['BW'],
@@ -133,8 +135,9 @@ def parse(conf='./Config.xml', app='./Apps.xml') :
                       child.attrib['Source'])
             edges.append(e2)
 
-            vertices.get(child.attrib['Destination']).Egress.append(e2)
-            vertices.get(child.attrib['Source']).Ingress.append(e2)
+            eg = vertices.get(child.attrib['Destination'])
+            if eg != None:
+                eg.Egress.append(e2)
 
     for child in app_root:
         msgs.append(Message(child.attrib['Name'], child.attrib['Source'],
