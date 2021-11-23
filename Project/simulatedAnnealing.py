@@ -177,8 +177,8 @@ def linkCapacityConstraint(solution: list[Route], C : int, E : list[Edge]):
                 ap = route.Msg.ArrivalPattern(cycle - alphas[e])
                 B_link_cs[e] += ap
         for e in range(0,len(E)):
-            if (B_link_cs[e] > 0):
-                print("B_link_value for " + str(e) + " is " + str(B_link_cs[e]) + " while capacity is " + str(E[e].Capacity))
+            # if (B_link_cs[e] > 0):
+            #     print("B_link_value for " + str(e) + " is " + str(B_link_cs[e]) + " while capacity is " + str(E[e].Capacity))
             if (B_link_cs[e] > E[e].Capacity):
                 print("Over cap")
                 return False
