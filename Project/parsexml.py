@@ -27,6 +27,7 @@ class Edge:
         self.PropDelay : int = int(PropDelay)
         self.Source : str = Source
         self.Destination : str = Destination
+        # Bandwidth is in MBit/s, but Capacity should be Bytes/c?
         self.Capacity : int = self.Bandwidth * CycleLength
         self.InducedDelay : int = math.ceil(self.PropDelay / CycleLength)
 
@@ -52,10 +53,7 @@ class Message:
         self.AcceptableDeadline : int = math.floor(int(Deadline) / CycleLength)
 
     def ArrivalPattern(self, cycle : int) -> int:
-        # print("Cycle " + str(cycle) + " * cyclelength " + str(CycleLength) + " % period " + str(self.Period))
-        # print((cycle * CycleLength) % self.Period)
-        if ((cycle * CycleLength) % self.Period <= 12):
-            # print("Yes")
+        if (((cycle * CycleLength) % self.Period) == 0):
             return self.Size
         else:
             return 0

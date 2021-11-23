@@ -3,8 +3,9 @@ from simulatedAnnealing import *
 from vsearch import *
 # import copy
 
-# vertices, edges, msgs = parse("Config.xml", "Apps.xml")
+# vertices, edges, msgs = parse("ConfigTest.xml", "AppsTest.xml")
 vertices, edges, msgs = parse("test cases/Medium/TC4/Input/Config.xml", "test cases/Medium/TC4/Input/Apps.xml")
+# vertices, edges, msgs = parse()
 
 # Generates an array of arrays. Each inner array is a route for a message.
 def initSolution():
@@ -21,19 +22,9 @@ def initSolution():
     return sol
 
 s = initSolution()
-# for r in s:
-#     print(r)
-#     print()
-sc = Cost(s, calculateHyperCycleLength(s), edges)
+sc = Cost(s)
 
 c = simulatedAnnealing(s, vertices, edges)
-# neighbourhood(s,vertices)
-cc = Cost(c, calculateHyperCycleLength(c), edges)
+cc = Cost(c)
 
 print("Cost before: " + str(sc) + ", cost after: " + str(cc))
-# if c != None:
-#     print("After neighbourhood")
-#     print("-------------------")
-#     for r in c:
-#         print(r)
-#         print()
