@@ -1,9 +1,9 @@
 from parsexml import *
 from simulatedAnnealing import *
 from vsearch import *
-# import copy
 
 # vertices, edges, msgs = parse("ConfigTest.xml", "AppsTest.xml")
+# vertices, edges, msgs = parse("test cases/Large/TC7/Input/Config.xml", "test cases/Large/TC7/Input/Apps.xml")
 vertices, edges, msgs = parse("test cases/Medium/TC4/Input/Config.xml", "test cases/Medium/TC4/Input/Apps.xml")
 # vertices, edges, msgs = parse("test cases/Small/TC1/Input/Config.xml", "test cases/Small/TC1/Input/Apps.xml")
 # vertices, edges, msgs = parse()
