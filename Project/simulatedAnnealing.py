@@ -39,26 +39,19 @@ def simulatedAnnealing(initialSolution,vertices,edges):
         if isSolutions.get(cp_id) == None:
             isSolutions[cp_id] = isSolution(CP,hcl,edges)
         if isSolutions.get(cb_id) == None:
-            print("Generating new curr best feasible")
             isSolutions[cb_id] = isSolution(curr_best,hcl,edges)
         sol_cb = isSolutions[cb_id]
         sol_cp = isSolutions[cp_id]
 
         if (AccProbability(Cost(C), Cost(CP), T) > prob):
             tried += 1
-            # if (sol_cp):
-            #     print(sol_cb)
-            #     print(str(Cost(curr_best)) + " " + str(Cost(C)))
             C = CP
             if (sol_cp and Cost(curr_best) > Cost(C)):    # New solution is feasible and better than current
-                print("Picking new one1")
                 curr_best = copy.deepcopy(C)
             elif (sol_cp and not sol_cb):  # New solution is feasible while current is not feasible
-                print("Picking new one2")
                 curr_best = copy.deepcopy(C)
             elif (not sol_cp and not sol_cb and Cost(curr_best) >
                   Cost(C)):    # both new and current are not feasible but new is better than current
-                print("Picking new one3")
                 curr_best = copy.deepcopy(C)
 
         T = T * r
