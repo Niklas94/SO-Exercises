@@ -23,9 +23,5 @@ def initSolution():
     return sol
 
 s = initSolution()
-sc = Cost(s)
 
 c = simulatedAnnealing(s, vertices, edges)
-cc = Cost(c)
-
-print("Cost before: " + str(sc) + ", cost after: " + str(cc))
