@@ -24,6 +24,7 @@ def simulatedAnnealing(initialSolution,vertices,edges):
     # solution, the value is the cost associated
     isSolutions = {}
     hcl = calculateHyperCycleLength(initialSolution)
+    initFeasible = isSolution(initialSolution,hcl,edges)
 
     while (T > 1):
         if print_counter % 20 == 0:
@@ -58,8 +59,10 @@ def simulatedAnnealing(initialSolution,vertices,edges):
         print_counter += 1
 
     print("Tried " + str(tried) + " different solutions.")
-    cb1 = isSolution(curr_best,hcl,edges)
-    print("Feasible: " + str(cb1))
+
+    foundFeasible = isSolution(curr_best,hcl,edges)
+    print("Initial solution was feasible: " + str(initFeasible))
+    print("Found solution was feasible: " + str(foundFeasible))
     return curr_best
 
 # Find 'nearby' solution
