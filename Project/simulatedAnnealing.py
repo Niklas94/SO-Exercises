@@ -140,6 +140,7 @@ def simulatedAnnealing(initialSolution,vertices,edges):
                 ct = "Cost \t\t{pm:d} \t{time:.7f}s \t{ttime:.7f}s \t{perc:.4f}%"
                 cs = "Checks \t\t{pm:d} \t{time:.7f}s \t{ttime:.7f}s \t{perc:.4f}%"
                 up = "Update E2E \t{pm:d} \t{time:.7f}s \t{ttime:.7f}s \t{perc:.4f}%"
+                end = "{t:.7f}s per iteration of simulated annealing."
 
                 total = solutionTotalTime + costTotalTime + checksTotalTime + updateTotalTime
 
@@ -157,6 +158,7 @@ def simulatedAnnealing(initialSolution,vertices,edges):
                 print(up.format(pm = print_mod, time = updateTotalTime /
                                 print_mod, ttime = updateTotalTime, perc =
                                 (updateTotalTime / total) * 100))
+                print(end.format(t = total / print_mod))
                 print()
 
                 solutionTotalTime   = 0.0
