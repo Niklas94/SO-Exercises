@@ -14,8 +14,8 @@ def genId(C):
 
 # Algorithm 5 - Exercises week 37
 def simulatedAnnealing(initialSolution,vertices,edges):
-    T = 1000000   # Temperature - Fixed value
-    r = 0.98    # Pick value between 0.8 - 0.99
+    T = 10000000            # Temperature - Fixed value
+    r = 0.999               # Pick value between 0.8 - 0.99
     C = initialSolution
     curr_best = copy.deepcopy(initialSolution)
     tried = 0
@@ -58,6 +58,8 @@ def simulatedAnnealing(initialSolution,vertices,edges):
         print_counter += 1
 
     print("Tried " + str(tried) + " different solutions.")
+    cb1 = isSolution(curr_best,hcl,edges)
+    print("Feasible: " + str(cb1))
     return curr_best
 
 # Find 'nearby' solution
@@ -164,23 +166,24 @@ def linkCapacityConstraint(solution: list[Route], C : int, E : list[Edge]):
     # that used that edge. It can then be checked if this value is above the
     # capacity of the edge in a single cycle. This is then checked for each
     # cycle.
-    for cycle in range(0,C):
+    for cycle in range(1,C+1):
         B_link_cs = [0] * len(E)
         for route in solution:
             alphas = [0] * len(E)
             prev_alph = 0
             for la in route.LinkAssignments:
                 indexOfCurrentLink = E.index(la.Link)
+                prev_alph += la.QueueNumber
                 alphas[indexOfCurrentLink] += prev_alph
-                prev_alph = prev_alph + la.Link.InducedDelay + la.QueueNumber
+                prev_alph = prev_alph + la.Link.InducedDelay
             for e in range(0,len(E)):
-                ap = route.Msg.ArrivalPattern(cycle - alphas[e])
+                if (alphas[e]== 0):
+                    ap = 0
+                else:
+                    ap = route.Msg.ArrivalPattern(cycle - alphas[e])
                 B_link_cs[e] += ap
         for e in range(0,len(E)):
-            # if (B_link_cs[e] > 0):
-            #     print("B_link_value for " + str(e) + " is " + str(B_link_cs[e]) + " while capacity is " + str(E[e].Capacity))
             if (B_link_cs[e] > E[e].Capacity):
-                print("Over cap")
                 return False
 
     return True
@@ -194,12 +197,14 @@ def linkCapacityConstraint(solution: list[Route], C : int, E : list[Edge]):
         #             if la.Link != link:
         #                 continue
         #             alpha += la.Link.InducedDelay + la.QueueNumber
+        #             print("A " + str(alpha))
 
         #         B_link_c += route.Msg.ArrivalPattern(cycle - alpha)
 
 
-        #     # print(B_link_c)
+        #     print(B_link_c)
         #     if (B_link_c > link.Capacity):
-        #         penalty += (B_link_c - link.Capacity)*500
         #         print("Link " + str(link) + " goes over the bandwith limit in cycle " + str(cycle))
+        #         return False
+        # return True
 

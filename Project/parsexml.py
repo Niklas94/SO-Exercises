@@ -28,7 +28,11 @@ class Edge:
         self.Source : str = Source
         self.Destination : str = Destination
         # Bandwidth is in MBit/s, but Capacity should be Bytes/c?
-        self.Capacity : int = self.Bandwidth * CycleLength
+        # Example of bandwidth of 1000 Mbit/s
+        # (1000 MBit/s) / 8 = 125 MByte/s
+        # (125 MByte/s) / 10^6 = 0.000125 MByte/micro_s
+        # (0.000125 MByte/micro_s) * 10^6 = 125 Byte/micro_s
+        self.Capacity : int = (self.Bandwidth//8) * CycleLength
         self.InducedDelay : int = math.ceil(self.PropDelay / CycleLength)
 
     def __str__(self):
