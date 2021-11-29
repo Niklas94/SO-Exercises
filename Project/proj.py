@@ -2,18 +2,19 @@ from parsexml import *
 from simulatedAnnealing import *
 from vsearch import *
 import time
-
+from typing import List
+from solutionToXml import solutionToXml
 
 start_time = time.time()
 # vertices, edges, msgs = parse("ConfigTest.xml", "AppsTest.xml")
-vertices, edges, msgs = parse("test cases/Large/TC7/Input/Config.xml", "test cases/Large/TC7/Input/Apps.xml")
+vertices, edges, msgs = parse("test cases/Small/TC1/Input/Config.xml", "test cases/Small/TC1/Input/Apps.xml")
 # vertices, edges, msgs = parse("test cases/Medium/TC4/Input/Config.xml", "test cases/Medium/TC4/Input/Apps.xml")
 # vertices, edges, msgs = parse("test cases/Small/TC1/Input/Config.xml", "test cases/Small/TC1/Input/Apps.xml")
 # vertices, edges, msgs = parse()
 
 # Generates an array of arrays. Each inner array is a route for a message.
 def initSolution():
-    sol : list[Route] = []
+    sol : List[Route] = []
 
     for m in msgs:
         curr : str = m.Source

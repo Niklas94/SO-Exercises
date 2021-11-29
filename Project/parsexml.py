@@ -1,13 +1,14 @@
 import xml.etree.ElementTree as ET
 import math
+from typing import List
 
 CycleLength = 12
 
 class Vertex:
     def __init__(self, Name : str):
         self.Name : str = Name
-        self.Ingress : list[Edge]= []
-        self.Egress : list[Edge] = []
+        self.Ingress : List[Edge]= []
+        self.Egress : List[Edge] = []
 
     def __str__(self) -> str:
         ret =  "Name: " + self.Name + "\nIngress: "
@@ -69,7 +70,7 @@ class Message:
 class Route:
     def __init__(self, Msg: Message):
         self.Msg : Message = Msg
-        self.LinkAssignments : list[LinkAssignment] = []
+        self.LinkAssignments : List[LinkAssignment] = []
         self.E2E : int = 0
         self.Id : str = ""
 
@@ -109,8 +110,8 @@ class LinkAssignment:
 
 def parse(conf='./Config.xml', app='./Apps.xml') :
     vertices : dict[str, Vertex] = {}
-    edges : list[Edge] = []
-    msgs : list[Message] = []
+    edges : List[Edge] = []
+    msgs : List[Message] = []
 
     conf_tree : ET.ElementTree = ET.parse(conf)
     conf_root : ET.Element = conf_tree.getroot()

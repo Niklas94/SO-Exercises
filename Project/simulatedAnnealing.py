@@ -3,6 +3,7 @@ import math
 import copy
 from vsearch import *
 import time
+from typing import List
 
 # Set to True to receive timing info on calculations during Simulated Annealing,
 # False to mute
@@ -232,7 +233,7 @@ def AccProbability(costCurrent, costNeighbour, T):
         return math.exp( (costCurrent - costNeighbour) / T)
 
 # Penalty function
-def Cost(solution : list[Route], maxBandwidths : list[int], E : list[Edge]):
+def Cost(solution : List[Route], maxBandwidths : List[int], E : List[Edge]):
     tE2E = 0
     # Omega is the average bandwidth used overall
     omega = 0
@@ -244,16 +245,17 @@ def Cost(solution : list[Route], maxBandwidths : list[int], E : list[Edge]):
     return tE2E + omega
 
 # Checks if solution is scheduble 
-def isSolution(solution : list[Route], C, edges):
+def isSolution(solution : List[Route], C, edges):
     ret = True
     for r in solution:
         if not r.MeetsDeadline():
             ret = False
             break
     linkCap, max_bandwidths = linkCapacityConstraint(solution,C,edges)
+    
     return ((ret and linkCap), max_bandwidths)
 
-def calculateHyperCycleLength(solution: list[Route]):
+def calculateHyperCycleLength(solution: List[Route]):
 
     # LCM (least common multiple) over all messages/flows
 
@@ -267,7 +269,7 @@ def calculateHyperCycleLength(solution: list[Route]):
     return math.ceil(lcm / 12)
 
 # Check that for every cycle, no link is transmitting more data than their bandwidth
-def linkCapacityConstraint(solution: list[Route], C : int, E : list[Edge]):
+def linkCapacityConstraint(solution: List[Route], C : int, E : List[Edge]):
 
     # Equation for this constraint
 

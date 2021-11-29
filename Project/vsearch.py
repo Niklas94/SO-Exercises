@@ -1,5 +1,6 @@
 from parsexml import *
 import random
+from typing import List
 
 # Returns false if not stuck (if has somewhere to go that has not already been
 # visited) at current position. Returns true if nowhere to go that hasn't
@@ -15,8 +16,8 @@ def stuck(curr, visited, vertices):
 # assignments taken to the route and return it.
 def search(cur, vis, sta, route, vertices):
     curr : str = cur
-    visited : list[str] = vis
-    stack : list[str] = sta
+    visited : List[str] = vis
+    stack : List[str] = sta
     destination : str = route.Msg.Destination
     while (curr != destination):
         # Check if the search destination is the destination of one of the
