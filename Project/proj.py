@@ -30,5 +30,9 @@ s = initSolution()
 
 c = simulatedAnnealing(s, vertices, edges)
 
-
 runtime = time.time() - start_time
+
+
+# Needs the variables ObjectiveValue and MeanE2E
+solutionToXml(runtime, 100, 200, s)
+
