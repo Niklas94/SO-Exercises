@@ -1,9 +1,6 @@
-import random
-import math
 import copy
 from vsearch import *
 import time
-from typing import List
 
 # Set to True to receive timing info on calculations during Simulated Annealing,
 # False to mute
@@ -20,9 +17,54 @@ def genId(solution : Solution):
         id += ro.Id
     return id
 
+# Prints info on the last print_mod iterations, such as average time and
+# percentage of overall time spent on different sections of simulated annealing.
+def printTimingInfo(solutionTotalTime, costTotalTime, checksTotalTime,
+                    updateTotalTime):
+    up = "Update E2E \t{pm:d} \t{time:.7f}s \t{ttime:.7f}s \t{perc:.4f}%"
+    fs = "Feasability \t{pm:d} \t{time:.7f}s \t{ttime:.7f}s \t{perc:.4f}%"
+    ct = "Cost \t\t{pm:d} \t{time:.7f}s \t{ttime:.7f}s \t{perc:.4f}%"
+    cs = "Checks \t\t{pm:d} \t{time:.7f}s \t{ttime:.7f}s \t{perc:.4f}%"
+    end = "{t:.7f}s per iteration of simulated annealing."
+
+    total = solutionTotalTime + costTotalTime + checksTotalTime + updateTotalTime
+
+    print("Type \t\tAmount \tAverage time \tTotal time \tPercentage")
+    print("------------------------------------------------------------------")
+    print(up.format(pm = print_mod, time = updateTotalTime /
+                    print_mod, ttime = updateTotalTime, perc =
+                    (updateTotalTime / total) * 100))
+    print(fs.format(pm = print_mod, time = solutionTotalTime /
+                    print_mod, ttime = solutionTotalTime, perc =
+                    (solutionTotalTime / total) * 100))
+    print(ct.format(pm = print_mod, time = costTotalTime /
+                    print_mod, ttime = costTotalTime, perc =
+                    (costTotalTime / total) * 100))
+    print(cs.format(pm = print_mod, time = checksTotalTime /
+                    print_mod, ttime = checksTotalTime, perc =
+                    (checksTotalTime / total) * 100))
+    print(end.format(t = total / print_mod))
+    print()
+
+def GenStringWriteAndClose(totalDone, bestDone, tried, bestCounter, costBefore,
+                           costAfter, costImprove, initFeasible, foundFeasible):
+    ret = str(totalDone)
+    ret += " " + str(bestDone)
+    ret += " " + str(tried)
+    ret += " " + str(bestCounter)
+    ret += " " + str(costBefore)
+    ret += " " + str(costAfter)
+    ret += " " + str(costImprove)
+    ret += " " + str(initFeasible)
+    ret += " " + str(foundFeasible)
+    ret += "\n"
+    f = open("file.txt", "a")
+    f.write(ret)
+    f.close()
+
 # Algorithm 5 - Exercises week 37
 def simulatedAnnealing(initialSolution : Solution, vertices : dict[str,Vertex],
-                       edges : List[Edge]):
+                       edges : List[Edge], writeToFile : bool):
     T = 10000000            # Temperature - Fixed value
     r = 0.99                # Pick value between 0.8 - 0.99
     C = initialSolution
@@ -42,6 +84,10 @@ def simulatedAnnealing(initialSolution : Solution, vertices : dict[str,Vertex],
         ro.CalculateE2E()
     costBefore = Cost(initialSolution, init_mb, edges)
     totalTime = time.time()
+
+    bestTime = 0.0
+    firstFeasible = 0.0
+    bestCounter = 0
 
     # Solely used for timing in debugging
     solutionTotalTime   = 0.0
@@ -89,7 +135,8 @@ def simulatedAnnealing(initialSolution : Solution, vertices : dict[str,Vertex],
             isSolutions[c_id] = isSolution(C,hcl,edges)
         sol_cb,cb_mb = isSolutions[cb_id]
         sol_cp,cp_mb = isSolutions[cp_id]
-        _, c_mb = isSolutions[c_id]
+        sol_c, c_mb = isSolutions[c_id]
+
 
         # Debugging purposes
         if timing:
@@ -99,6 +146,8 @@ def simulatedAnnealing(initialSolution : Solution, vertices : dict[str,Vertex],
         # Debugging purposes
         sCost = time.time()
 
+        # If a key,value pair of either of the 3 solutions that are looked at in
+        # this iteration does not exist in the costs dict, create it
         if costs.get(cp_id) == None:
             costs[cp_id] = Cost(CP,cp_mb,edges)
         if costs.get(cb_id) == None:
@@ -108,6 +157,13 @@ def simulatedAnnealing(initialSolution : Solution, vertices : dict[str,Vertex],
         cost_c = costs[c_id]
         cost_cb = costs[cb_id]
         cost_cp = costs[cp_id]
+
+        if (sol_cb and firstFeasible == 0.0):
+            firstFeasible = cost_cb
+        if (sol_cp and firstFeasible == 0.0):
+            firstFeasible = cost_cp
+        if (sol_c and firstFeasible == 0.0):
+            firstFeasible = cost_c
 
         # Debugging purposes
         if timing:
@@ -122,11 +178,17 @@ def simulatedAnnealing(initialSolution : Solution, vertices : dict[str,Vertex],
             C = CP
             if (sol_cp and cost_cb > cost_cp):    # New solution is feasible and better than current
                 curr_best = copy.deepcopy(C)
+                bestTime = time.time()
+                bestCounter += 1
             elif (sol_cp and not sol_cb):  # New solution is feasible while current is not feasible
                 curr_best = copy.deepcopy(C)
+                bestTime = time.time()
+                bestCounter += 1
             elif (not sol_cp and not sol_cb and cost_cb >
                   cost_cp):    # both new and current are not feasible but new is better than current
                 curr_best = copy.deepcopy(C)
+                bestTime = time.time()
+                bestCounter += 1
 
         # Debugging purposes
         if timing:
@@ -138,31 +200,8 @@ def simulatedAnnealing(initialSolution : Solution, vertices : dict[str,Vertex],
         # Debugging purposes
         if timing:
             if print_counter % print_mod == 0:
-                up = "Update E2E \t{pm:d} \t{time:.7f}s \t{ttime:.7f}s \t{perc:.4f}%"
-                fs = "Feasability \t{pm:d} \t{time:.7f}s \t{ttime:.7f}s \t{perc:.4f}%"
-                ct = "Cost \t\t{pm:d} \t{time:.7f}s \t{ttime:.7f}s \t{perc:.4f}%"
-                cs = "Checks \t\t{pm:d} \t{time:.7f}s \t{ttime:.7f}s \t{perc:.4f}%"
-                end = "{t:.7f}s per iteration of simulated annealing."
-
-                total = solutionTotalTime + costTotalTime + checksTotalTime + updateTotalTime
-
-                print("Type \t\tAmount \tAverage time \tTotal time \tPercentage")
-                print("------------------------------------------------------------------")
-                print(up.format(pm = print_mod, time = updateTotalTime /
-                                print_mod, ttime = updateTotalTime, perc =
-                                (updateTotalTime / total) * 100))
-                print(fs.format(pm = print_mod, time = solutionTotalTime /
-                                print_mod, ttime = solutionTotalTime, perc =
-                                (solutionTotalTime / total) * 100))
-                print(ct.format(pm = print_mod, time = costTotalTime /
-                                print_mod, ttime = costTotalTime, perc =
-                                (costTotalTime / total) * 100))
-                print(cs.format(pm = print_mod, time = checksTotalTime /
-                                print_mod, ttime = checksTotalTime, perc =
-                                (checksTotalTime / total) * 100))
-                print(end.format(t = total / print_mod))
-                print()
-
+                printTimingInfo(solutionTotalTime, costTotalTime,
+                                 checksTotalTime, updateTotalTime)
                 solutionTotalTime   = 0.0
                 costTotalTime       = 0.0
                 checksTotalTime     = 0.0
@@ -170,16 +209,39 @@ def simulatedAnnealing(initialSolution : Solution, vertices : dict[str,Vertex],
 
         print_counter += 1
 
-    print("Done in {time:.2f}s.".format(time = (time.time()-totalTime)))
-    print("Tried {t:d} different solutions.".format(t = tried))
-
+    endTime = time.time()
+    totalDone = endTime - totalTime
+    bestDone = bestTime - totalTime
     foundFeasible, found_mb = isSolution(curr_best,hcl,edges)
     costAfter = Cost(curr_best, found_mb, edges)
-    print("Cost before: {c:.2f}.".format(c = costBefore))
-    print("Cost after: {c:.2f}.".format(c = costAfter))
+    costImprove = firstFeasible - costAfter
 
-    print("Initial solution was feasible: " + str(initFeasible))
-    print("Found solution was feasible: " + str(foundFeasible))
+
+    if writeToFile:
+        GenStringWriteAndClose(totalDone, bestDone, tried, bestCounter,
+                               costBefore, costAfter, costImprove, initFeasible,
+                               foundFeasible)
+    else:
+        done = "Done in {time:.2f}s ({mtime:.2f}m).".format(time = totalDone, mtime
+                                                            = totalDone/60)
+        fbest = "Found best solution in {time:.2f}s ({mtime:.2f}m).".format(time =
+                                                                          bestDone,
+                                                                          mtime =
+                                                                          bestDone/60)
+        trieddiff = "Tried {t:d} different solutions.".format(t = tried)
+        fnew = "Found new best {t:d} times.".format(t = bestCounter)
+        costb = "Cost before: {c:.2f}.".format(c = costBefore)
+        costa = "Cost after: {c:.2f}.".format(c = costAfter)
+        costf = "Cost from first feasible to last improved by: {c:.2f}.".format(c =
+                                                                                costImprove)
+        initfeas = "Initial solution was feasible: " + str(initFeasible)
+        endfeas = "Found solution was feasible: " + str(foundFeasible)
+
+        strings = [done, fbest, trieddiff, fnew, costb, costa, costf, initfeas,
+               endfeas]
+
+        for s in strings:
+            print(s)
 
     return curr_best
 

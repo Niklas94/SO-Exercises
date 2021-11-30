@@ -1,6 +1,5 @@
 from parsexml import *
 import random
-from typing import List
 
 # Returns false if not stuck (if has somewhere to go that has not already been
 # visited) at current position. Returns true if nowhere to go that hasn't
