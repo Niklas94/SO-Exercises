@@ -7,7 +7,8 @@ from solutionToXml import solutionToXml
 
 start_time = time.time()
 # vertices, edges, msgs = parse("ConfigTest.xml", "AppsTest.xml")
-vertices, edges, msgs = parse("test cases/Small/TC1/Input/Config.xml", "test cases/Small/TC1/Input/Apps.xml")
+# vertices, edges, msgs = parse("test cases/Small/TC1/Input/Config.xml", "test cases/Small/TC1/Input/Apps.xml")
+vertices, edges, msgs = parse("test cases/example/Input/Config.xml", "test cases/example/Input/Apps.xml")
 # vertices, edges, msgs = parse("test cases/Medium/TC4/Input/Config.xml", "test cases/Medium/TC4/Input/Apps.xml")
 # vertices, edges, msgs = parse("test cases/Small/TC1/Input/Config.xml", "test cases/Small/TC1/Input/Apps.xml")
 # vertices, edges, msgs = parse()

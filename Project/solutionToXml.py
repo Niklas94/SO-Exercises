@@ -16,9 +16,9 @@ def solutionToXml(runtime, solution: Solution):
     tree = ET.SubElement(root, "Solution")
 
 
-    tree.set("MeanBW", str(solution.ObjectiveValue))
-    tree.set("MeanE2E", str(solution.MeanE2E))
-    tree.set("Runtime", str(runtime))
+    tree.set("Runtime", "{rt:.1f}".format(rt = runtime))
+    tree.set("MeanE2E", str(int(solution.MeanE2E)))
+    tree.set("MeanBW", str(int(solution.ObjectiveValue)))
 
 
     r : Route
@@ -27,7 +27,7 @@ def solutionToXml(runtime, solution: Solution):
     for r in solution.Routes:
         msg = ET.SubElement(root, "Message")
         msg.set("Name", r.Msg.Name)
-        msg.set("MaxE2E", str(r.E2E))
+        msg.set("MaxE2E", str(r.E2E * 12))
 
         for linkAssignment in r.LinkAssignments:
 

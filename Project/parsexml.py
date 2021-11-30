@@ -117,7 +117,7 @@ class Solution:
         meane2e = 0
         for ro in self.Routes:
             ro.CalculateE2E()
-            meane2e += ro.E2E
+            meane2e += (ro.E2E * CycleLength)
         meane2e /= len(self.Routes)
 
         self.MeanE2E = meane2e

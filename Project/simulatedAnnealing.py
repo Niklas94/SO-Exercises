@@ -233,7 +233,7 @@ def AccProbability(costCurrent, costNeighbour, T):
     else:
         return math.exp( (costCurrent - costNeighbour) / T)
 
-def CalculateOmega(maxBandwidths : List[int], E : List[Edge]):
+def CalculateOmega(maxBandwidths : List[float], E : List[Edge]):
     omega = 0
     for b in maxBandwidths:
         omega += b
@@ -241,13 +241,12 @@ def CalculateOmega(maxBandwidths : List[int], E : List[Edge]):
     return omega
 
 # Penalty function
-def Cost(solution : Solution, maxBandwidths : List[int], E : List[Edge]):
+def Cost(solution : Solution, maxBandwidths : List[float], E : List[Edge]):
     tE2E = 0
     # Omega is the average bandwidth used overall
     for r in solution.Routes:
         tE2E += r.E2E
     omega = CalculateOmega(maxBandwidths, E)
-    print(omega)
     solution.ObjectiveValue = omega
 
     return tE2E + omega
@@ -260,7 +259,6 @@ def isSolution(solution : Solution, C, edges):
             ret = False
             break
     linkCap, max_bandwidths = linkCapacityConstraint(solution,C,edges)
-    print(max_bandwidths)
 
     return ((ret and linkCap), max_bandwidths)
 
@@ -302,7 +300,7 @@ def linkCapacityConstraint(solution: Solution, C : int, E : List[Edge]):
     # capacity of the edge in a single cycle. This is then checked for each
     # cycle.
     ret = True
-    max_bandwidths = [0] * len(E)
+    max_bandwidths : List[float] = [0] * len(E)
     for cycle in range(1,C+1):
         B_link_cs = [0] * len(E)
         for route in solution.Routes:
@@ -332,7 +330,7 @@ def linkCapacityConstraint(solution: Solution, C : int, E : List[Edge]):
                 ret = False
 
     for i in range(0,len(E)):
-        max_bandwidths[i] = (max_bandwidths[i]//E[i].Capacity)*1000
+        max_bandwidths[i] = (max_bandwidths[i]/E[i].Capacity)*1000
 
     return (ret, max_bandwidths)
 
