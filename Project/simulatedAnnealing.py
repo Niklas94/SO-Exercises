@@ -137,16 +137,19 @@ def simulatedAnnealing(initialSolution,vertices,edges):
         # Debugging purposes
         if timing:
             if print_counter % print_mod == 0:
+                up = "Update E2E \t{pm:d} \t{time:.7f}s \t{ttime:.7f}s \t{perc:.4f}%"
                 fs = "Feasability \t{pm:d} \t{time:.7f}s \t{ttime:.7f}s \t{perc:.4f}%"
                 ct = "Cost \t\t{pm:d} \t{time:.7f}s \t{ttime:.7f}s \t{perc:.4f}%"
                 cs = "Checks \t\t{pm:d} \t{time:.7f}s \t{ttime:.7f}s \t{perc:.4f}%"
-                up = "Update E2E \t{pm:d} \t{time:.7f}s \t{ttime:.7f}s \t{perc:.4f}%"
                 end = "{t:.7f}s per iteration of simulated annealing."
 
                 total = solutionTotalTime + costTotalTime + checksTotalTime + updateTotalTime
 
                 print("Type \t\tAmount \tAverage time \tTotal time \tPercentage")
                 print("------------------------------------------------------------------")
+                print(up.format(pm = print_mod, time = updateTotalTime /
+                                print_mod, ttime = updateTotalTime, perc =
+                                (updateTotalTime / total) * 100))
                 print(fs.format(pm = print_mod, time = solutionTotalTime /
                                 print_mod, ttime = solutionTotalTime, perc =
                                 (solutionTotalTime / total) * 100))
@@ -156,9 +159,6 @@ def simulatedAnnealing(initialSolution,vertices,edges):
                 print(cs.format(pm = print_mod, time = checksTotalTime /
                                 print_mod, ttime = checksTotalTime, perc =
                                 (checksTotalTime / total) * 100))
-                print(up.format(pm = print_mod, time = updateTotalTime /
-                                print_mod, ttime = updateTotalTime, perc =
-                                (updateTotalTime / total) * 100))
                 print(end.format(t = total / print_mod))
                 print()
 
@@ -232,16 +232,20 @@ def AccProbability(costCurrent, costNeighbour, T):
     else:
         return math.exp( (costCurrent - costNeighbour) / T)
 
+def CalculateOmega(maxBandwidths : List[int], E : List[Edge]):
+    omega = 0
+    for b in maxBandwidths:
+        omega += b
+    omega /= len(E)
+    return omega
+
 # Penalty function
 def Cost(solution : List[Route], maxBandwidths : List[int], E : List[Edge]):
     tE2E = 0
     # Omega is the average bandwidth used overall
-    omega = 0
     for r in solution:
         tE2E += r.E2E
-    for b in maxBandwidths:
-        omega += b
-    omega /= len(E)
+    omega = CalculateOmega(maxBandwidths, E)
     return tE2E + omega
 
 # Checks if solution is scheduble 
@@ -252,7 +256,7 @@ def isSolution(solution : List[Route], C, edges):
             ret = False
             break
     linkCap, max_bandwidths = linkCapacityConstraint(solution,C,edges)
-    
+
     return ((ret and linkCap), max_bandwidths)
 
 def calculateHyperCycleLength(solution: List[Route]):
