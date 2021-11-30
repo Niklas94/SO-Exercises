@@ -107,6 +107,19 @@ class LinkAssignment:
     def __str__(self):
         return ("Source: " + str(self.Link.Source) + ", Destination: " + str(self.Link.Destination) + ", QueueNumber: " + str(self.QueueNumber))
 
+class Solution:
+    def __init__(self):
+        self.Routes : List[Route] = []
+        self.ObjectiveValue : int = 0
+        self.MeanE2E : int = 0
+
+    def __str__(self):
+        ret = ("ObjectiveValue: " + str(self.ObjectiveValue) + ", MeanE2E: " +
+               str(self.MeanE2E))
+        for ro in self.Routes:
+            ret += "\n" + ro.__str__()
+        return ret
+
 
 def parse(conf='./Config.xml', app='./Apps.xml') :
     vertices : dict[str, Vertex] = {}
