@@ -100,6 +100,7 @@ def runStatistics(iterations : int, filePaths : List[str]):
     print("Output written to out.txt")
     l.close()
 
+# Runs simulated annealing once on given files and returns solution
 def runOnce(filePath : str):
     vertices, edges, msgs = parse(filePath + "Config.xml", filePath + "Apps.xml")
     s = initSolution(msgs, vertices)
