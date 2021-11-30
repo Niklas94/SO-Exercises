@@ -7,24 +7,24 @@ Created on Mon Nov 29 18:15:27 2021
 
 import xml.etree.cElementTree as ET
 from xml.dom import minidom
-from parsexml import Route, LinkAssignment
+from parsexml import Route, LinkAssignment, Solution
 
 
-def solutionToXml(runtime, objectiveValue, meanE2Edelay, routes, sizefolder, case):
+def solutionToXml(runtime, solution: Solution):
     root = ET.Element("Report")
     
     solution = ET.SubElement(root, "Solution")
     
    
-    solution.set("MeanBW", str(objectiveValue))
-    solution.set("MeanE2E", str(meanE2Edelay))
+    solution.set("MeanBW", str(solution.objectiveValue))
+    solution.set("MeanE2E", str(solution.meanE2Edelay))
     solution.set("Runtime", str(runtime))
     
     
     r : Route
     linkAssignment : LinkAssignment
     
-    for r in routes:
+    for r in solution.routes:
         msg = ET.SubElement(root, "Message")
         msg.set("Name", r.Msg.Name)
         msg.set("MaxE2E", str(r.E2E))
