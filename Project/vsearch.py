@@ -1,45 +1,41 @@
 from parsexml import *
+import random
 
-def stuck(curr : str, visited : list[str], vertices : dict[str, Vertex]) -> bool:
+# Returns false if not stuck (if has somewhere to go that has not already been
+# visited) at current position. Returns true if nowhere to go that hasn't
+# already been visited.
+def stuck(curr, visited, vertices):
     ret = True
     for e in vertices[curr].Egress:
         if e.Destination not in visited:
             ret = False
     return ret
 
-def search(cu : str, vis : list[str], sta : list[str], msg2r : Route, vertices :
-           dict[str, Vertex]) -> Route:
-    curr : str = cu
-    visited : list[str] = vis
-    stack : list[str] = sta
-    while (curr != msg2r.Msg.Destination):
-        # check if the edges going out of current vertex are already
-        # assigned to queues. If not, pick random queues from 1 to the total
-        # number of outgoing edges to assign each edge.            
-        # if (len(vertices[curr].Egress) > 0):
-        #     unset = vertices[curr].Egress[0].Queue == 0
-        #     if unset:
-        #         e_len = len(vertices[curr].Egress)
-        #         for i in range (0, e_len):
-        #             rand = random.randint(1,e_len+1)
-        #             vertices[curr].Egress[i].Queue = rand
-
+# Search for a route between cur and route.Msg.Destination, append link
+# assignments taken to the route and return it.
+def search(cur, vis, sta, route, vertices):
+    curr : str = cur
+    visited : List[str] = vis
+    stack : List[str] = sta
+    destination : str = route.Msg.Destination
+    while (curr != destination):
         # Check if the search destination is the destination of one of the
-        # outgoing edges
+        # outgoing edges, if so, create link assignment from the edge leading
+        # there, add to the route, and return the route.
         for edge in vertices[curr].Egress:
-            if edge.Destination == msg2r.Msg.Destination:
+            if edge.Destination == destination:
                 curr = edge.Destination
                 e = edge
                 break
 
         # If we're not at the goal, get next vertex
-        if curr != msg2r.Msg.Destination:
+        if curr != destination:
             visited.append(curr)
             stack.append(curr)
             # If stuck go back to the node you just came from and try
             # another way
             while stuck(curr,visited,vertices):
-                msg2r.LinkAssignments.pop(len(msg2r.LinkAssignments)-1)
+                route.LinkAssignments.pop(len(route.LinkAssignments)-1)
                 stack.pop(len(stack)-1)
                 curr = stack[len(stack)-1]
 
@@ -52,8 +48,7 @@ def search(cu : str, vis : list[str], sta : list[str], msg2r : Route, vertices :
             e : Edge = vertices[curr].Egress[ran_num-1]
             curr = vertices[curr].Egress[ran_num-1].Destination
 
-        msg2r.LinkAssignments.append(e)
-        # Always multiplies by queue even if it might be send earlier due to T %
-        # q == 0
-        msg2r.E2E += (e.Queue * CycleLength) + int(e.PropDelay)
-    return msg2r
+        randomQueue = random.randint(1,3)
+        route.LinkAssignments.append(LinkAssignment(e, randomQueue))
+        route.Id += str(e.Id) + str(randomQueue)
+    return route

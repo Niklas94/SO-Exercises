@@ -1,33 +1,19 @@
-from parsexml import *
-from simulatedAnnealing import *
-from vsearch import *
-import copy
+import time
+from util import *
+from solutionToXml import solutionToXml
 
-# vertices, edges, msgs = parse("Config.xml", "Apps.xml")
-vertices, edges, msgs = parse()
 
-# Generates an array of arrays. Each inner array is a route for a message.
-def initSolution() -> list[Route]:
-    sol : list[Route] = []
-    for m in msgs:
-        curr : str = m.Source
-        route : Route = Route(m)
+# Run several full simulated annealing iterations of multiple files
+# testPaths = []
+# testPaths.append("test cases/Small/TC1/Input/")
+# testPaths.append("test cases/Medium/TC4/Input/")
+# testPaths.append("test cases/Large/TC7/Input/")
+# runStatistics(10, testPaths)
 
-        # Do a search from current to m.destination. Route will be appended to
-        # the route object by reference.
-        search(curr,[],[],route,vertices)
-        sol.append(route)
-    return sol
-
-s : list[Route] = initSolution()
-for r in s:
-    print(r)
-    print()
-
-# neighbourhood(s,vertices)
-
-# print("After neighbourhood")
-# print("-------------------")
-# for r in s:
-#     print(r)
-#     print()
+# Run single simulated annealing iteration on single file, output solution to
+# Report.xml
+start_time = time.time()
+c = runOnce("test cases/Small/TC1/Input/")
+runtime = time.time() - start_time
+c.CalculateMeanE2E()
+solutionToXml(runtime, c)
