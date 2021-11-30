@@ -7,21 +7,22 @@ from typing import List
 
 # Set to True to receive timing info on calculations during Simulated Annealing,
 # False to mute
-timing = True
+timing = False
 
 # Set modulo for which i'th iterations to print information in
 print_mod = 50
 
 # Generates unique string ids for 3 given solutions. These Ids are an
 # amalgamation of the link ids and queue numbers used in the routes.
-def genId(C):
+def genId(solution : Solution):
     id = ""
-    for ro in C:
+    for ro in solution.Routes:
         id += ro.Id
     return id
 
 # Algorithm 5 - Exercises week 37
-def simulatedAnnealing(initialSolution,vertices,edges):
+def simulatedAnnealing(initialSolution : Solution, vertices : dict[str,Vertex],
+                       edges : List[Edge]):
     T = 10000000            # Temperature - Fixed value
     r = 0.99                # Pick value between 0.8 - 0.99
     C = initialSolution
@@ -36,8 +37,8 @@ def simulatedAnnealing(initialSolution,vertices,edges):
     costs = {}
     hcl = calculateHyperCycleLength(initialSolution)
 
-    initFeasible, init_mb = isSolution(initialSolution,hcl,edges)
-    for ro in initialSolution:
+    initFeasible, init_mb = isSolution(initialSolution, hcl, edges)
+    for ro in initialSolution.Routes:
         ro.CalculateE2E()
     costBefore = Cost(initialSolution, init_mb, edges)
     totalTime = time.time()
@@ -63,11 +64,11 @@ def simulatedAnnealing(initialSolution,vertices,edges):
         sUpdate = time.time()
 
         # Update E2Es
-        for ro in CP:
+        for ro in CP.Routes:
             ro.CalculateE2E()
-        for ro in C:
+        for ro in C.Routes:
             ro.CalculateE2E()
-        for ro in curr_best:
+        for ro in curr_best.Routes:
             ro.CalculateE2E()
 
         # Debugging purposes
@@ -183,9 +184,9 @@ def simulatedAnnealing(initialSolution,vertices,edges):
     return curr_best
 
 # Find 'nearby' solution
-def neighbourhood (routes,vertices):
+def neighbourhood (solution,vertices):
     prob = random.uniform(0,1)
-    randomRoute = random.choice(routes)
+    randomRoute = random.choice(solution.Routes)
     randomLAC = random.randint(0,len(randomRoute.LinkAssignments)-1)
     randomLA = randomRoute.LinkAssignments[randomLAC]
 
@@ -220,7 +221,7 @@ def neighbourhood (routes,vertices):
         # as you cannot change a specific character in string, one needs to
         # slice around the character and include the new one in the middle
         randomRoute.Id = randomRoute.Id[:idQueueIndex] + str(rand) + randomRoute.Id[idQueueIndex+1:]
-    return routes
+    return solution
 
 
 
@@ -240,40 +241,44 @@ def CalculateOmega(maxBandwidths : List[int], E : List[Edge]):
     return omega
 
 # Penalty function
-def Cost(solution : List[Route], maxBandwidths : List[int], E : List[Edge]):
+def Cost(solution : Solution, maxBandwidths : List[int], E : List[Edge]):
     tE2E = 0
     # Omega is the average bandwidth used overall
-    for r in solution:
+    for r in solution.Routes:
         tE2E += r.E2E
     omega = CalculateOmega(maxBandwidths, E)
+    print(omega)
+    solution.ObjectiveValue = omega
+
     return tE2E + omega
 
 # Checks if solution is scheduble 
-def isSolution(solution : List[Route], C, edges):
+def isSolution(solution : Solution, C, edges):
     ret = True
-    for r in solution:
+    for r in solution.Routes:
         if not r.MeetsDeadline():
             ret = False
             break
     linkCap, max_bandwidths = linkCapacityConstraint(solution,C,edges)
+    print(max_bandwidths)
 
     return ((ret and linkCap), max_bandwidths)
 
-def calculateHyperCycleLength(solution: List[Route]):
+def calculateHyperCycleLength(solution: Solution):
 
     # LCM (least common multiple) over all messages/flows
 
     # Source for calculating LCM: https://www.includehelp.com/python/find-the-lcm-of-the-array-elements.aspx
-    lcm = int(solution[0].Msg.Period)
+    lcm = int(solution.Routes[0].Msg.Period)
 
-    for i in range(1, len(solution)):
-        a_i = int(solution[i].Msg.Period)
+    for i in range(1, len(solution.Routes)):
+        a_i = int(solution.Routes[i].Msg.Period)
         lcm = (lcm*a_i)//math.gcd(lcm, a_i)
 
     return math.ceil(lcm / 12)
 
 # Check that for every cycle, no link is transmitting more data than their bandwidth
-def linkCapacityConstraint(solution: List[Route], C : int, E : List[Edge]):
+def linkCapacityConstraint(solution: Solution, C : int, E : List[Edge]):
 
     # Equation for this constraint
 
@@ -300,7 +305,7 @@ def linkCapacityConstraint(solution: List[Route], C : int, E : List[Edge]):
     max_bandwidths = [0] * len(E)
     for cycle in range(1,C+1):
         B_link_cs = [0] * len(E)
-        for route in solution:
+        for route in solution.Routes:
             alphas = [0] * len(E)
             prev_alph = 0
             for la in route.LinkAssignments:

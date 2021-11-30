@@ -14,7 +14,8 @@ vertices, edges, msgs = parse("test cases/Small/TC1/Input/Config.xml", "test cas
 
 # Generates an array of arrays. Each inner array is a route for a message.
 def initSolution():
-    sol : List[Route] = []
+    solution : Solution = Solution()
+    routes : List[Route] = []
 
     for m in msgs:
         curr : str = m.Source
@@ -23,8 +24,11 @@ def initSolution():
         # Do a search from current to m.destination. Route will be appended to
         # the route object by reference.
         search(curr,[],[],route,vertices)
-        sol.append(route)
-    return sol
+        routes.append(route)
+
+    solution.Routes = routes
+
+    return solution
 
 s = initSolution()
 
@@ -34,5 +38,6 @@ runtime = time.time() - start_time
 
 
 # Needs the variables ObjectiveValue and MeanE2E
-solutionToXml(runtime, 100, 200, s)
+c.CalculateMeanE2E()
+solutionToXml(runtime, c)
 

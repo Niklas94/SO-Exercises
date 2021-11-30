@@ -110,8 +110,17 @@ class LinkAssignment:
 class Solution:
     def __init__(self):
         self.Routes : List[Route] = []
-        self.ObjectiveValue : int = 0
-        self.MeanE2E : int = 0
+        self.ObjectiveValue : float = 0
+        self.MeanE2E : float = 0
+
+    def CalculateMeanE2E(self):
+        meane2e = 0
+        for ro in self.Routes:
+            ro.CalculateE2E()
+            meane2e += ro.E2E
+        meane2e /= len(self.Routes)
+
+        self.MeanE2E = meane2e
 
     def __str__(self):
         ret = ("ObjectiveValue: " + str(self.ObjectiveValue) + ", MeanE2E: " +
