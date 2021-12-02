@@ -8,7 +8,7 @@ def initSolution(msgs,vertices):
         route : Route = Route(m)
         # Do a search from current to m.destination. Route will be appended to
         # the route object by reference.
-        search(curr,[],[],route,vertices)
+        search(m.Source,[],[],route,vertices)
         solution.Routes.append(route)
 
     return solution
