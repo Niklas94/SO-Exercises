@@ -366,22 +366,24 @@ def linkCapacityConstraint(solution: Solution, C : int, E : List[Edge]):
     for cycle in range(1,C+1):
         B_link_cs = [0] * len(E)
         for route in solution.Routes:
-            alphas = [0] * len(E)
+            # alphas = [0] * len(E)
             prev_alph = 0
             for la in route.LinkAssignments:
                 indexOfCurrentLink = E.index(la.Link)
                 prev_alph += la.QueueNumber
-                alphas[indexOfCurrentLink] += prev_alph
-                prev_alph = prev_alph + la.Link.InducedDelay
-            for e in range(0,len(E)):
-                # If specific edge hasn't been touched (the alpha value
-                # associated with it is 0), we do not want to calculate arrival
-                # pattern for it
-                if (alphas[e] == 0):
-                    ap = 0
-                else:
-                    ap = route.Msg.ArrivalPattern(cycle - alphas[e])
-                B_link_cs[e] += ap
+                # alphas[indexOfCurrentLink] += prev_alph
+                B_link_cs[indexOfCurrentLink] += route.Msg.ArrivalPattern(cycle
+                                                                          - prev_alph)
+                prev_alph += la.Link.InducedDelay
+            # for e in range(0,len(E)):
+            #     # If specific edge hasn't been touched (the alpha value
+            #     # associated with it is 0), we do not want to calculate arrival
+            #     # pattern for it
+            #     if (alphas[e] == 0):
+            #         ap = 0
+            #     else:
+            #         ap = route.Msg.ArrivalPattern(cycle - alphas[e])
+            #     B_link_cs[e] += ap
         for e in range(0,len(E)):
             if B_link_cs[e] > max_bandwidths[e]:
                 max_bandwidths[e] = B_link_cs[e]
