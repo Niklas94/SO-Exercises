@@ -1,7 +1,7 @@
 import copy
 from vsearch import *
 import time
-
+from typing import Dict 
 # Set to True to receive timing info on calculations during Simulated Annealing,
 # False to mute
 timing = False
@@ -65,7 +65,7 @@ def GenStringWriteAndClose(totalDone, firstFeasibleTime, bestDone, tried,
     f.close()
 
 # Algorithm 5 - Exercises week 37
-def simulatedAnnealing(initialSolution : Solution, vertices : dict[str,Vertex],
+def simulatedAnnealing(initialSolution : Solution, vertices : Dict[str,Vertex],
                        edges : List[Edge], writeToFile : bool):
     T = 10000000            # Temperature - Fixed value
     r = 0.99                # Pick value between 0.8 - 0.99

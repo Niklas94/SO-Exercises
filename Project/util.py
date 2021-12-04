@@ -3,18 +3,13 @@ from simulatedAnnealing import *
 # Generates an array of arrays. Each inner array is a route for a message.
 def initSolution(msgs,vertices):
     solution : Solution = Solution()
-    routes : List[Route] = []
 
     for m in msgs:
-        curr : str = m.Source
         route : Route = Route(m)
-
         # Do a search from current to m.destination. Route will be appended to
         # the route object by reference.
-        search(curr,[],[],route,vertices)
-        routes.append(route)
-
-    solution.Routes = routes
+        search(m.Source,[],[],route,vertices)
+        solution.Routes.append(route)
 
     return solution
 
