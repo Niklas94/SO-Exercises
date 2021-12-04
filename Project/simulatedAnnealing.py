@@ -46,9 +46,11 @@ def printTimingInfo(solutionTotalTime, costTotalTime, checksTotalTime,
     print(end.format(t = total / print_mod))
     print()
 
-def GenStringWriteAndClose(totalDone, bestDone, tried, bestCounter, costBefore,
-                           costAfter, costImprove, initFeasible, foundFeasible):
+def GenStringWriteAndClose(totalDone, firstFeasibleTime, bestDone, tried,
+                           bestCounter, costBefore, costAfter, costImprove,
+                           initFeasible, foundFeasible):
     ret = str(totalDone)
+    ret += " " + str(firstFeasibleTime)
     ret += " " + str(bestDone)
     ret += " " + str(tried)
     ret += " " + str(bestCounter)
@@ -87,6 +89,7 @@ def simulatedAnnealing(initialSolution : Solution, vertices : dict[str,Vertex],
 
     bestTime = 0.0
     firstFeasible = 0.0
+    firstFeasibleTime = 0.0
     bestCounter = 0
 
     # Solely used for timing in debugging
@@ -96,8 +99,8 @@ def simulatedAnnealing(initialSolution : Solution, vertices : dict[str,Vertex],
     updateTotalTime     = 0.0
 
     while (T > 1):
-        if print_counter % print_mod == 0:
-            print('T: {temp:.2f}'.format(temp = T))
+        # if print_counter % print_mod == 0:
+        #     print('T: {temp:.2f}'.format(temp = T))
         CP = neighbourhood(C,vertices)
         prob = random.uniform(0,1)
 
@@ -160,10 +163,13 @@ def simulatedAnnealing(initialSolution : Solution, vertices : dict[str,Vertex],
 
         if (sol_cb and firstFeasible == 0.0):
             firstFeasible = cost_cb
+            firstFeasibleTime = time.time()
         if (sol_cp and firstFeasible == 0.0):
             firstFeasible = cost_cp
+            firstFeasibleTime = time.time()
         if (sol_c and firstFeasible == 0.0):
             firstFeasible = cost_c
+            firstFeasibleTime = time.time()
 
         # Debugging purposes
         if timing:
@@ -215,12 +221,13 @@ def simulatedAnnealing(initialSolution : Solution, vertices : dict[str,Vertex],
     foundFeasible, found_mb = isSolution(curr_best,hcl,edges)
     costAfter = Cost(curr_best, found_mb, edges)
     costImprove = firstFeasible - costAfter
+    firstFeasibleTime = firstFeasibleTime - totalTime
 
 
     if writeToFile:
-        GenStringWriteAndClose(totalDone, bestDone, tried, bestCounter,
-                               costBefore, costAfter, costImprove, initFeasible,
-                               foundFeasible)
+        GenStringWriteAndClose(totalDone, firstFeasibleTime, bestDone, tried,
+                               bestCounter, costBefore, costAfter, costImprove,
+                               initFeasible, foundFeasible)
     else:
         done = "Done in {time:.2f}s ({mtime:.2f}m).".format(time = totalDone, mtime
                                                             = totalDone/60)
